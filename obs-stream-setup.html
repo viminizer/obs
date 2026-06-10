@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OBS Stream Setup — Instructions & Scene Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0e1116; --surface:#161b22; --surface-2:#1c2230; --border:rgba(255,255,255,.09);
+    --text:#e8edf3; --dim:#9aa6b4; --faint:#5f6b7a;
+    --amber:#e0a458; --amber-dim:rgba(224,164,88,.14);
+    --green:#3fb27f; --green-dim:rgba(63,178,127,.14);
+    --live:#e8546b; --live-dim:rgba(232,84,107,.16);
+    --sky:#5aa9d6;
+  }
+  @media (prefers-color-scheme:light){
+    :root{
+      --bg:#f3f1ec; --surface:#fbfaf7; --surface-2:#f0ede6; --border:rgba(0,0,0,.10);
+      --text:#1d2128; --dim:#5a6472; --faint:#8b95a3;
+      --amber:#b9742a; --green:#2c7d57; --live:#c33a52; --sky:#2f7aa6;
+      --amber-dim:rgba(185,116,42,.12); --green-dim:rgba(44,125,87,.12); --live-dim:rgba(195,58,82,.12);
+    }
+  }
+  *{box-sizing:border-box;min-width:0}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:
+      radial-gradient(900px 500px at 85% -10%, var(--amber-dim), transparent 60%),
+      radial-gradient(700px 500px at -5% 10%, var(--green-dim), transparent 55%),
+      var(--bg);
+    color:var(--text);font-family:"DM Sans",system-ui,sans-serif;line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:54px 26px 90px}
+  code,.mono{font-family:"Fira Code",ui-monospace,monospace}
+
+  /* header */
+  .live-tag{display:inline-flex;align-items:center;gap:8px;font-family:"Fira Code",monospace;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--live);
+    background:var(--live-dim);border:1px solid color-mix(in srgb,var(--live) 40%,transparent);
+    padding:5px 12px;border-radius:100px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--live);box-shadow:0 0 0 0 var(--live)}
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.05;margin:.5em 0 .2em;letter-spacing:-.02em}
+  h1 .b{color:var(--amber)}
+  .lead{font-size:18px;color:var(--dim);max-width:62ch}
+  .meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+  .chip{font-family:"Fira Code",monospace;font-size:12.5px;color:var(--dim);
+    background:var(--surface);border:1px solid var(--border);border-radius:7px;padding:6px 11px}
+  .chip b{color:var(--text);font-weight:500}
+
+  .seclabel{display:flex;align-items:center;gap:10px;font-family:"Fira Code",monospace;font-size:12px;
+    letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:64px 0 20px}
+  .seclabel::before{content:"";width:9px;height:9px;border-radius:2px;background:var(--amber)}
+  .seclabel::after{content:"";flex:1;height:1px;background:var(--border)}
+
+  /* run steps */
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+  .step{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 20px 22px;position:relative}
+  .step .n{font-family:"Fira Code",monospace;font-size:13px;color:var(--amber);
+    border:1px solid color-mix(in srgb,var(--amber) 45%,transparent);background:var(--amber-dim);
+    width:30px;height:30px;display:grid;place-items:center;border-radius:8px;margin-bottom:13px}
+  .step h3{margin:0 0 6px;font-size:16px}
+  .step p{margin:0;color:var(--dim);font-size:14.5px}
+  .cmd{margin-top:14px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+    padding:11px 13px;font-family:"Fira Code",monospace;font-size:12.5px;color:var(--green);
+    overflow-x:auto;white-space:nowrap}
+  .cmd .c{color:var(--faint)}
+
+  /* scene grid */
+  .scenes{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:22px}
+  .scene{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 14px 18px}
+  .scene.feat{grid-column:1/-1;display:grid;grid-template-columns:1.35fr 1fr;gap:24px;align-items:center;
+    background:linear-gradient(180deg,var(--surface-2),var(--surface));padding:22px}
+  @media(max-width:720px){.scene.feat{grid-template-columns:1fr}}
+  .scene h3{margin:12px 2px 4px;font-size:16.5px;display:flex;align-items:center;gap:9px}
+  .scene h3 .live{width:9px;height:9px;border-radius:50%;background:var(--live)}
+  .scene p{margin:0 2px;color:var(--dim);font-size:13.5px}
+  .scene .feat-body h3{margin-top:0;font-size:20px}
+  .scene .feat-body p{font-size:15px}
+
+  /* the 16:9 canvas mockup */
+  .canvas{aspect-ratio:16/9;border-radius:9px;position:relative;overflow:hidden;
+    border:1px solid var(--border);background:#0a0d12;box-shadow:inset 0 0 0 1px rgba(255,255,255,.02)}
+  .res-badge{position:absolute;top:8px;left:8px;z-index:5;font-family:"Fira Code",monospace;
+    font-size:10px;letter-spacing:.05em;color:var(--faint);background:rgba(0,0,0,.45);
+    border:1px solid var(--border);padding:2px 7px;border-radius:5px}
+  .src{position:absolute;display:grid;place-items:center;text-align:center;overflow:hidden}
+  .src .tag{font-family:"Fira Code",monospace;font-size:11px;letter-spacing:.05em;
+    padding:3px 9px;border-radius:6px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.12)}
+  .src .sub{font-family:"Fira Code",monospace;font-size:9.5px;color:rgba(255,255,255,.55);margin-top:5px}
+  /* full-bleed capture */
+  .fill{inset:0}
+  .fill.game{background:
+    repeating-linear-gradient(135deg,rgba(224,164,88,.08) 0 22px,transparent 22px 44px),
+    radial-gradient(120% 120% at 30% 20%,#243b4d,#101822 70%)}
+  .fill.code{background:
+    linear-gradient(180deg,#0f1722,#0c131c);
+    background-image:linear-gradient(180deg,#101a26,#0c131c)}
+  .fill.code::before{content:"";position:absolute;inset:0;
+    background:repeating-linear-gradient(0deg,transparent 0 26px,rgba(90,169,214,.06) 26px 27px)}
+  .fill .tag{color:#fff}
+  /* code editor faux lines */
+  .codelines{position:absolute;left:7%;top:16%;right:34%;display:flex;flex-direction:column;gap:7px;opacity:.55}
+  .codelines i{height:6px;border-radius:3px;background:var(--sky);display:block}
+  .codelines i:nth-child(1){width:40%}.codelines i:nth-child(2){width:62%;background:var(--green)}
+  .codelines i:nth-child(3){width:28%;background:var(--amber)}.codelines i:nth-child(4){width:54%}
+  .codelines i:nth-child(5){width:46%;background:var(--green)}.codelines i:nth-child(6){width:33%}
+  /* webcam corner */
+  .cam{left:1%;top:50%;transform:translateY(-50%);width:25%;height:25%;border-radius:7px;
+    background:radial-gradient(120% 120% at 50% 30%,#3a4a3f,#1a2620);
+    border:1.5px solid var(--green);box-shadow:0 6px 18px rgba(0,0,0,.4)}
+  .cam.full{inset:0;top:0;left:0;transform:none;width:100%;height:100%;border-radius:0;border:0;
+    background:radial-gradient(80% 90% at 50% 38%,#3d4a40,#161f1a)}
+  .cam .tag{background:var(--green-dim);border-color:color-mix(in srgb,var(--green) 50%,transparent);color:#cfeede}
+  .cam .face{position:absolute;width:30%;aspect-ratio:1;border-radius:50%;
+    background:rgba(63,178,127,.32);top:24%}
+  .cam.full .face{width:17%;top:24%}
+  /* centered text scenes */
+  .txt{inset:0;flex-direction:column;gap:4px;
+    background:radial-gradient(90% 90% at 50% 35%,#1a1f2e,#0c0f16)}
+  .txt .big{font-family:"DM Sans";font-weight:700;font-size:clamp(18px,3.2vw,30px);color:#fff;letter-spacing:-.01em}
+  .txt .small{font-family:"Fira Code",monospace;font-size:10.5px;color:var(--faint);letter-spacing:.1em}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin:16px 2px 0}
+  .legend span{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--dim)}
+  .swatch{width:11px;height:11px;border-radius:3px}
+
+  /* tables */
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th,td{text-align:left;padding:12px 16px;border-bottom:1px solid var(--border);vertical-align:top}
+  thead th{background:var(--surface-2);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:500}
+  tbody tr:last-child td{border-bottom:0}
+  td code{font-size:12.5px;color:var(--amber)}
+  td .v{color:var(--green);font-family:"Fira Code",monospace;font-size:13px}
+
+  /* mic chain */
+  .chain{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+  .node{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 15px;flex:1;min-width:135px}
+  .node .k{font-size:14.5px;font-weight:500}
+  .node .d{font-size:12px;color:var(--dim);margin-top:2px}
+  .arrow{color:var(--faint);font-family:"Fira Code",monospace}
+
+  /* callout */
+  .callout{display:flex;gap:14px;background:var(--amber-dim);
+    border:1px solid color-mix(in srgb,var(--amber) 38%,transparent);border-radius:12px;padding:18px 20px}
+  .callout .bar{width:3px;border-radius:3px;background:var(--amber);flex:none}
+  .callout h3{margin:0 0 6px;font-size:15.5px}
+  .callout ul{margin:0;padding-left:18px;color:var(--dim);font-size:14px}
+  .callout li{margin:5px 0}
+  .callout b{color:var(--text);font-weight:500}
+
+  footer{margin-top:60px;padding-top:22px;border-top:1px solid var(--border);
+    color:var(--faint);font-size:12.5px;font-family:"Fira Code",monospace}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <span class="live-tag"><span class="dot"></span>Stream kit</span>
+  <h1>OBS setup, <span class="b">automated.</span></h1>
+  <p class="lead">One PowerShell script installs your plugins, builds an NVENC streaming profile, and drops in five ready-made scenes. This page shows how to run it — and how each scene looks on stream.</p>
+  <div class="meta-row">
+    <span class="chip">Target: <b>Windows + NVIDIA</b></span>
+    <span class="chip">Output: <b>1080p60 · 6000 kbps</b></span>
+    <span class="chip">Encoder: <b>NVENC H.264</b></span>
+    <span class="chip">Streaming via: <b>Restream</b></span>
+  </div>
+
+  <!-- RUN -->
+  <div class="seclabel">Run it on the streaming PC</div>
+  <div class="steps">
+    <div class="step">
+      <div class="n">1</div>
+      <h3>Copy the script over</h3>
+      <p>Move <code>obs-stream-setup.ps1</code> to the Windows PC (USB, cloud, or Downloads). The HTML can ride along.</p>
+    </div>
+    <div class="step">
+      <div class="n">2</div>
+      <h3>Run in PowerShell</h3>
+      <p>Open the folder, then run the command. It asks for admin once (UAC) and installs silently.</p>
+      <div class="cmd"><span class="c"># in the script's folder</span><br>powershell -ExecutionPolicy Bypass -File .\obs-stream-setup.ps1</div>
+    </div>
+    <div class="step">
+      <div class="n">3</div>
+      <h3>Pick devices in OBS</h3>
+      <p>Open OBS → choose the <b>Stream 1080p60 NVENC</b> profile and <b>Stream Kit</b> collection → click each capture/webcam/mic source once to select your hardware.</p>
+    </div>
+  </div>
+
+  <!-- SCENES -->
+  <div class="seclabel">How it looks on stream — 5 scenes</div>
+
+  <div class="scenes">
+
+    <!-- featured: Gaming -->
+    <div class="scene feat">
+      <div>
+        <div class="canvas">
+          <span class="res-badge">1920 × 1080</span>
+          <div class="src fill game"><span class="tag">DISPLAY CAPTURE</span><span class="sub">whole screen · everything you see</span></div>
+          <div class="src cam"><span class="tag">WEBCAM</span><div class="face"></div></div>
+        </div>
+      </div>
+      <div class="feat-body">
+        <h3><span class="live"></span>Gaming</h3>
+        <p>Your main scene. Your whole screen fills the canvas; webcam sits on the left, vertically centered, at 25% size with the background already cut out (no green screen). Mic + desktop audio are live in the mixer.</p>
+        <div class="legend">
+          <span><span class="swatch" style="background:#243b4d"></span>Full-screen capture</span>
+          <span><span class="swatch" style="background:var(--green)"></span>Webcam · BG removed</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Coding -->
+    <div class="scene">
+      <div class="canvas">
+        <span class="res-badge">1920 × 1080</span>
+        <div class="src fill code">
+          <div class="codelines"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+          <span class="tag" style="position:relative;z-index:2">DISPLAY CAPTURE</span>
+        </div>
+        <div class="src cam"><span class="tag">WEBCAM</span><div class="face"></div></div>
+      </div>
+      <h3><span class="live"></span>Coding</h3>
+      <p>Full monitor capture for dev work, webcam in the same corner.</p>
+    </div>
+
+    <!-- Just Chatting -->
+    <div class="scene">
+      <div class="canvas">
+        <span class="res-badge">1920 × 1080</span>
+        <div class="src cam full"><span class="tag" style="position:absolute;bottom:8%">WEBCAM · FULLSCREEN</span><div class="face"></div></div>
+      </div>
+      <h3><span class="live"></span>Just Chatting</h3>
+      <p>Webcam fills the frame for talking segments. Mic live, game/desktop hidden.</p>
+    </div>
+
+    <!-- Starting Soon -->
+    <div class="scene">
+      <div class="canvas">
+        <span class="res-badge">1920 × 1080</span>
+        <div class="src txt"><span class="big">Starting Soon…</span><span class="small">EDITABLE TEXT · DARK BG</span></div>
+      </div>
+      <h3>Starting Soon</h3>
+      <p>Hold scene before you go live. Edit the text in source properties.</p>
+    </div>
+
+    <!-- BRB -->
+    <div class="scene">
+      <div class="canvas">
+        <span class="res-badge">1920 × 1080</span>
+        <div class="src txt"><span class="big">Be Right Back</span><span class="small">EDITABLE TEXT · DARK BG</span></div>
+      </div>
+      <h3>BRB</h3>
+      <p>Switch to it for breaks without killing the stream.</p>
+    </div>
+
+  </div>
+
+  <!-- AUDIO -->
+  <div class="seclabel">Mic filter chain — already wired</div>
+  <div class="chain">
+    <div class="node"><div class="k">Noise Suppression</div><div class="d">RNNoise — kills fan / keyboard hiss</div></div>
+    <span class="arrow">→</span>
+    <div class="node"><div class="k">Noise Gate</div><div class="d">Mutes the room when you're silent</div></div>
+    <span class="arrow">→</span>
+    <div class="node"><div class="k">Compressor</div><div class="d">Evens out loud/quiet, +3 dB makeup</div></div>
+    <span class="arrow">→</span>
+    <div class="node"><div class="k">Limiter</div><div class="d">Stops clipping at −2 dB</div></div>
+  </div>
+
+  <!-- ENCODER + PLUGINS -->
+  <div class="seclabel">What the script configures</div>
+  <div class="panel" style="margin-bottom:22px">
+    <table>
+      <thead><tr><th style="width:42%">Encoder / video setting</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Encoder</td><td><span class="v">NVENC H.264</span> <span style="color:var(--dim)">(<code>obs_nvenc_h264_tex</code>)</span></td></tr>
+        <tr><td>Rate control · bitrate</td><td><span class="v">CBR · 6000 kbps</span></td></tr>
+        <tr><td>Resolution · FPS</td><td><span class="v">1920×1080 · 60</span></td></tr>
+        <tr><td>Keyframe interval · preset</td><td><span class="v">2 s · P5 (Quality)</span></td></tr>
+        <tr><td>Profile</td><td><span class="v">Stream 1080p60 NVENC</span> — Restream key copied over</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="panel">
+    <table>
+      <thead><tr><th style="width:32%">Plugin</th><th style="width:14%">Version</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td>Move transition</td><td><code>3.2.1</code></td><td>Animated transitions + source movement (the StreamFX replacement)</td></tr>
+        <tr><td>Source Clone</td><td><code>0.2.3</code></td><td>Reuse one source / filter chain across scenes</td></tr>
+        <tr><td>Advanced Scene Switcher</td><td><code>1.34.2</code></td><td>Auto-switch scenes on rules (game launches → Gaming)</td></tr>
+        <tr><td>Background Removal</td><td><code>1.3.7</code></td><td>AI webcam cutout — no green screen</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- NOTES -->
+  <div class="seclabel">Before you go live</div>
+  <div class="callout">
+    <div class="bar"></div>
+    <div>
+      <h3>Two things to know</h3>
+      <ul>
+        <li><b>Gaming and Coding now both capture the whole screen</b> (same Display Capture source). Keep both as labels for scene-switching, or delete one if you don't need it.</li>
+        <li><b>StreamFX was dropped on purpose.</b> It's abandoned (last real build 2023) and breaks on OBS 31. Move transition covers what most people used it for.</li>
+        <li><b>Nothing is destructive</b> — the script only <b>adds</b> a new profile and scene collection. Your existing ones stay untouched.</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>obs-stream-setup.ps1 · run with admin · OBS 31 · Windows + NVENC</footer>
+
+</div>
+</body>
+</html>
