@@ -256,7 +256,7 @@ $sceneJson = @'
       "uuid": "a0000000-0000-4000-8000-000000000003",
       "id": "dshow_input",
       "versioned_id": "dshow_input",
-      "settings": {},
+      "settings": { "res_type": 1, "resolution": "1920x1080", "last_resolution": "1920x1080" },
       "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
       "monitoring_type": 0, "private_settings": {},
       "filters": [
