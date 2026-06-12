@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+  CS2 live stats overlay - ACID PROTOCOL theme.
+  Served by gsi-server.ps1 at http://127.0.0.1:3456/ - add that URL as an OBS
+  Browser Source (1920x1080). It hides itself when CS2 is not sending data.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@600;700&display=swap');
+  :root { --acid: #DFE104; --ink: #0a0a0a; --paper: #f5f5f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+               font-family: 'Chakra Petch', sans-serif; }
+
+  #hud { position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+         display: flex; align-items: stretch; border: 4px solid var(--ink);
+         box-shadow: 7px 7px 0 var(--ink); opacity: 0; transition: opacity .3s; }
+  #hud.on { opacity: 1; }
+
+  .seg { display: flex; align-items: center; gap: 8px; padding: 7px 16px; background: var(--ink); }
+  .seg .k { font-family: 'Russo One', sans-serif; font-size: 14px; color: var(--ink); background: var(--acid);
+            padding: 1px 8px; letter-spacing: 1px; transform: skewX(-8deg); }
+  .seg .v { font-family: 'Russo One', sans-serif; font-size: 21px; color: var(--paper); letter-spacing: 1px;
+            font-variant-numeric: tabular-nums; }
+  .seg.score { background: var(--acid); }
+  .seg.score .v { color: var(--ink); }
+  .seg.score .rnd { font-size: 13px; font-weight: 700; color: var(--ink); letter-spacing: 2px; align-self: center; }
+  .div { width: 4px; background: var(--acid); }
+  .seg .v.money { color: var(--acid); }
+  .seg .v.hurt { color: #ff5050; }
+
+  /* bomb planted banner */
+  #bomb { position: absolute; top: 96px; left: 50%; transform: translateX(-50%) rotate(-1.5deg);
+          background: #e21c1c; color: #fff; border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--acid);
+          font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: 4px; padding: 5px 20px;
+          display: none; animation: flash .6s steps(1) infinite; }
+  #bomb.on { display: block; }
+  @keyframes flash { 50% { opacity: .45; } }
+</style>
+</head>
+<body>
+  <div id="hud">
+    <div class="seg score"><span class="v" id="ct">0</span><span class="rnd" id="rnd">R1</span><span class="v" id="t">0</span></div>
+    <div class="div"></div>
+    <div class="seg"><span class="k">HP</span><span class="v" id="hp">100</span></div>
+    <div class="seg"><span class="k">ARM</span><span class="v" id="arm">100</span></div>
+    <div class="div"></div>
+    <div class="seg"><span class="k">$</span><span class="v money" id="money">0</span></div>
+    <div class="div"></div>
+    <div class="seg"><span class="k">K</span><span class="v" id="k">0</span>
+                     <span class="k">D</span><span class="v" id="d">0</span>
+                     <span class="k">A</span><span class="v" id="a">0</span></div>
+  </div>
+  <div id="bomb">&#9888; BOMB PLANTED</div>
+
+<script>
+  const $ = id => document.getElementById(id);
+  function render(g) {
+    const inGame = g && g.map && g.player && g.player.state &&
+                   (!g.player.activity || g.player.activity !== 'menu');
+    $('hud').classList.toggle('on', !!inGame);
+    if (!inGame) { $('bomb').classList.remove('on'); return; }
+
+    $('ct').textContent  = g.map.team_ct ? g.map.team_ct.score : 0;
+    $('t').textContent   = g.map.team_t ? g.map.team_t.score : 0;
+    $('rnd').textContent = 'R' + ((g.map.round || 0) + 1);
+
+    const st = g.player.state;
+    $('hp').textContent  = st.health;
+    $('hp').classList.toggle('hurt', st.health <= 40);
+    $('arm').textContent = st.armor;
+    $('money').textContent = st.money;
+
+    const ms = g.player.match_stats || {};
+    $('k').textContent = ms.kills ?? 0;
+    $('d').textContent = ms.deaths ?? 0;
+    $('a').textContent = ms.assists ?? 0;
+
+    $('bomb').classList.toggle('on', !!(g.round && g.round.bomb === 'planted'));
+  }
+  async function tick() {
+    try {
+      const r = await fetch('/data', { cache: 'no-store' });
+      render(await r.json());
+    } catch (e) {
+      $('hud').classList.remove('on');
+      $('bomb').classList.remove('on');
+    }
+    setTimeout(tick, 300);
+  }
+  tick();
+</script>
+</body>
+</html>

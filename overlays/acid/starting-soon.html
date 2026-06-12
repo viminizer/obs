@@ -52,6 +52,14 @@
   .ammo i:nth-child(9){ animation-delay: 2.24s; } .ammo i:nth-child(10){ animation-delay: 2.52s; }
   @keyframes fill { 0% { background: var(--ink); opacity: .15; } 50%,100% { background: var(--acid); opacity: 1; border: 2px solid var(--ink); } }
 
+  /* countdown plate */
+  .count { background: var(--ink); color: var(--acid); border: 5px solid var(--acid);
+           box-shadow: 8px 8px 0 var(--paper); padding: 6px 26px; transform: rotate(-1deg);
+           font-family: 'Russo One', sans-serif; font-size: 54px; letter-spacing: 6px;
+           font-variant-numeric: tabular-nums; }
+  .count.zero { animation: anysec .9s steps(1) infinite; font-size: 40px; letter-spacing: 4px; }
+  @keyframes anysec { 50% { opacity: .4; } }
+
   .socials { display: flex; gap: 18px; }
   .chip { background: var(--ink); color: var(--paper); border: 3px solid var(--acid); padding: 6px 18px;
           font-weight: 700; font-size: 20px; letter-spacing: 2px; }
@@ -81,6 +89,7 @@
   <div class="wrap">
     <div class="plate p1">STARTING</div>
     <div class="plate p2">SOON&trade;</div>
+    <div class="count" id="count">05:00</div>
     <div class="ammo"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="socials">
       <div class="chip">TWITCH <b>/ZEVON</b></div>
@@ -91,5 +100,27 @@
 
   <div class="reg tl"></div><div class="reg tr"></div><div class="reg bl"></div><div class="reg br"></div>
   <div class="grain"></div>
+
+<script>
+  // Countdown length in minutes - edit this number to change it.
+  // Tick "Refresh browser when scene becomes active" on the OBS source so the
+  // timer restarts every time you switch to the Starting Soon scene.
+  const COUNTDOWN_MINUTES = 5;
+
+  const el = document.getElementById('count');
+  const end = Date.now() + COUNTDOWN_MINUTES * 60000;
+  (function tick() {
+    const left = Math.max(0, Math.round((end - Date.now()) / 1000));
+    if (left === 0) {
+      el.textContent = 'ANY SECOND NOW';
+      el.classList.add('zero');
+      return;
+    }
+    const m = String(Math.floor(left / 60)).padStart(2, '0');
+    const s = String(left % 60).padStart(2, '0');
+    el.textContent = 'LIVE IN ' + m + ':' + s;
+    setTimeout(tick, 250);
+  })();
+</script>
 </body>
 </html>
