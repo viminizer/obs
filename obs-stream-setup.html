@@ -159,12 +159,13 @@
 
   <span class="live-tag"><span class="dot"></span>Stream kit</span>
   <h1>OBS setup, <span class="b">automated.</span></h1>
-  <p class="lead">One PowerShell script installs your plugins, builds an NVENC streaming profile, and drops in five ready-made scenes. This page shows how to run it — and how each scene looks on stream.</p>
+  <p class="lead">One script installs your plugins, builds an NVENC streaming profile, and drops in five ready-made scenes — with animated overlays, live CS2 stats, replay clips, audio ducking, and auto scene switching wired in. This page shows how to run it and what you get.</p>
   <div class="meta-row">
     <span class="chip">Target: <b>Windows + NVIDIA</b></span>
-    <span class="chip">Output: <b>1080p60 · 6000 kbps</b></span>
+    <span class="chip">Output: <b>1080p60 · 9000 kbps</b></span>
     <span class="chip">Encoder: <b>NVENC H.264</b></span>
-    <span class="chip">Streaming via: <b>Restream</b></span>
+    <span class="chip">Streaming via: <b>Restream → YouTube</b></span>
+    <span class="chip">Overlay theme: <b>acid · printstream · purple</b></span>
   </div>
 
   <!-- RUN -->
@@ -172,14 +173,14 @@
   <div class="steps">
     <div class="step">
       <div class="n">1</div>
-      <h3>Copy the script over</h3>
-      <p>Move <code>obs-stream-setup.ps1</code> to the Windows PC (USB, cloud, or Downloads). The HTML can ride along.</p>
+      <h3>Copy the whole folder</h3>
+      <p>Clone the repo (or copy the entire folder) to the Windows PC — the <code>overlays\</code> and <code>gsi\</code> folders must come along, the script installs from them.</p>
     </div>
     <div class="step">
       <div class="n">2</div>
-      <h3>Run in PowerShell</h3>
-      <p>Open the folder, then run the command. It asks for admin once (UAC) and installs silently.</p>
-      <div class="cmd"><span class="c"># in the script's folder</span><br>powershell -ExecutionPolicy Bypass -File .\obs-stream-setup.ps1</div>
+      <h3>Double-click run-setup.bat</h3>
+      <p>It asks for admin once (UAC) and installs silently. Default overlay theme is <b>acid</b>; pass another to switch.</p>
+      <div class="cmd"><span class="c"># default (acid) — or pick a theme:</span><br>run-setup.bat<br>run-setup.bat printstream<br>run-setup.bat purple</div>
     </div>
     <div class="step">
       <div class="n">3</div>
@@ -204,10 +205,10 @@
       </div>
       <div class="feat-body">
         <h3><span class="live"></span>Gaming</h3>
-        <p>Your main scene. Your whole screen fills the canvas; webcam sits on the left, vertically centered, at 25% size with the background already cut out (no green screen). Mic + desktop audio are live in the mixer.</p>
+        <p>Your main scene. Whole screen fills the canvas; webcam sits on the left at 25% size inside an animated themed frame. The HUD overlay (brand, LIVE badge, scrolling ticker) rides on top, and a live CS2 stats bar (HP / money / K-D-A / round score) appears top-center when the game is running. Mic + desktop audio are live in the mixer.</p>
         <div class="legend">
           <span><span class="swatch" style="background:#243b4d"></span>Full-screen capture</span>
-          <span><span class="swatch" style="background:var(--green)"></span>Webcam · BG removed</span>
+          <span><span class="swatch" style="background:var(--green)"></span>Webcam + animated frame</span>
         </div>
       </div>
     </div>
@@ -233,27 +234,27 @@
         <div class="src cam full"><span class="tag" style="position:absolute;bottom:8%">WEBCAM · FULLSCREEN</span><div class="face"></div></div>
       </div>
       <h3><span class="live"></span>Just Chatting</h3>
-      <p>Webcam fills the frame for talking segments. Mic live, game/desktop hidden.</p>
+      <p>Webcam fills the frame for talking segments, with the animated theme background behind and the HUD on top. Mic live, game/desktop hidden.</p>
     </div>
 
     <!-- Starting Soon -->
     <div class="scene">
       <div class="canvas">
         <span class="res-badge">1920 × 1080</span>
-        <div class="src txt"><span class="big">Starting Soon…</span><span class="small">EDITABLE TEXT · DARK BG</span></div>
+        <div class="src txt"><span class="big">Starting Soon…</span><span class="small">ANIMATED · LIVE COUNTDOWN</span></div>
       </div>
       <h3>Starting Soon</h3>
-      <p>Hold scene before you go live. Edit the text in source properties.</p>
+      <p>Animated hold screen with a real countdown ("LIVE IN 04:32", default 5 min — edit <code>COUNTDOWN_MINUTES</code> in the overlay file).</p>
     </div>
 
     <!-- BRB -->
     <div class="scene">
       <div class="canvas">
         <span class="res-badge">1920 × 1080</span>
-        <div class="src txt"><span class="big">Be Right Back</span><span class="small">EDITABLE TEXT · DARK BG</span></div>
+        <div class="src txt"><span class="big">Be Right Back</span><span class="small">ANIMATED THEME SCREEN</span></div>
       </div>
       <h3>BRB</h3>
-      <p>Switch to it for breaks without killing the stream.</p>
+      <p>Animated break screen. Optional: an Advanced Scene Switcher idle rule can switch here automatically after 2 min of no input.</p>
     </div>
 
   </div>
@@ -277,9 +278,10 @@
       <thead><tr><th style="width:42%">Encoder / video setting</th><th>Value</th></tr></thead>
       <tbody>
         <tr><td>Encoder</td><td><span class="v">NVENC H.264</span> <span style="color:var(--dim)">(<code>obs_nvenc_h264_tex</code>)</span></td></tr>
-        <tr><td>Rate control · bitrate</td><td><span class="v">CBR · 6000 kbps</span></td></tr>
+        <tr><td>Rate control · bitrate</td><td><span class="v">CBR · 9000 kbps</span> — YouTube has no 6000 cap</td></tr>
         <tr><td>Resolution · FPS</td><td><span class="v">1920×1080 · 60</span></td></tr>
         <tr><td>Keyframe interval · preset</td><td><span class="v">2 s · P5 (Quality)</span></td></tr>
+        <tr><td>Replay buffer</td><td><span class="v">last 60 s in memory</span> — auto-starts with the stream, <b>F10</b> saves a clip to Videos</td></tr>
         <tr><td>Profile</td><td><span class="v">Stream 1080p60 NVENC</span> — Restream key copied over</td></tr>
       </tbody>
     </table>
@@ -288,10 +290,24 @@
     <table>
       <thead><tr><th style="width:32%">Plugin</th><th style="width:14%">Version</th><th>Role</th></tr></thead>
       <tbody>
-        <tr><td>Move transition</td><td><code>3.2.1</code></td><td>Animated transitions + source movement (the StreamFX replacement)</td></tr>
+        <tr><td>Move transition</td><td><code>3.2.1</code></td><td>Animated transitions — set as the default scene transition</td></tr>
         <tr><td>Source Clone</td><td><code>0.2.3</code></td><td>Reuse one source / filter chain across scenes</td></tr>
-        <tr><td>Advanced Scene Switcher</td><td><code>1.34.2</code></td><td>Auto-switch scenes on rules (game launches → Gaming)</td></tr>
-        <tr><td>Background Removal</td><td><code>1.3.7</code></td><td>AI webcam cutout — no green screen</td></tr>
+        <tr><td>Advanced Scene Switcher</td><td><code>1.34.2</code></td><td>Rule-based switching (used for the optional idle → BRB rule)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- AUTOMATION -->
+  <div class="seclabel">Stream automation — wired in by the script</div>
+  <div class="panel">
+    <table>
+      <thead><tr><th style="width:32%">Feature</th><th>How it behaves</th></tr></thead>
+      <tbody>
+        <tr><td>Live CS2 stats</td><td>CS2 pushes game state (official Valve GSI) to a tiny local server; the Gaming scene shows HP / armor / money / K-D-A / round score + a BOMB PLANTED banner. Start <code>%APPDATA%\obs-studio\gsi\run-gsi.bat</code> before streaming — without it the bar simply hides.</td></tr>
+        <tr><td>Auto scene switch</td><td>Focusing the CS2 window switches OBS to the Gaming scene (built-in switcher, pre-configured).</td></tr>
+        <tr><td>Audio ducking</td><td>Desktop Audio has a compressor sidechained to the mic — game volume dips while you talk.</td></tr>
+        <tr><td>Replay clips</td><td><b>F10</b> saves the last 60 s to your Videos folder. Buffer starts with the stream automatically.</td></tr>
+        <tr><td>Animated overlays</td><td>Webcam frame, HUD ticker, animated background, countdown + BRB screens — all browser sources, theme chosen at install (<code>acid</code> default). Edit text in <code>%APPDATA%\obs-studio\overlays\*.html</code>, then right-click the source → Refresh.</td></tr>
       </tbody>
     </table>
   </div>
@@ -301,11 +317,13 @@
   <div class="callout">
     <div class="bar"></div>
     <div>
-      <h3>Two things to know</h3>
+      <h3>Your manual steps</h3>
       <ul>
-        <li><b>Gaming and Coding now both capture the whole screen</b> (same Display Capture source). Keep both as labels for scene-switching, or delete one if you don't need it.</li>
-        <li><b>StreamFX was dropped on purpose.</b> It's abandoned (last real build 2023) and breaks on OBS 31. Move transition covers what most people used it for.</li>
-        <li><b>Nothing is destructive</b> — the script only <b>adds</b> a new profile and scene collection. Your existing ones stay untouched.</li>
+        <li><b>Pick your devices once</b> — Display Capture, Webcam, Mic, Desktop Audio (step 3 above).</li>
+        <li><b>Idle → BRB rule (one time, ~30 s):</b> Tools → Advanced Scene Switcher → Idle tab → enable, switch to <b>BRB</b> after <b>120 seconds</b>. The script can't pre-build this one safely.</li>
+        <li><b>Before each stream:</b> double-click <code>%APPDATA%\obs-studio\gsi\run-gsi.bat</code> and leave the window open — it powers the live CS2 stats.</li>
+        <li><b>Settings → Stream:</b> confirm Restream/YouTube is still connected.</li>
+        <li><b>Nothing is destructive</b> — the script only <b>adds</b> a new profile and scene collection. Your existing ones stay untouched. Re-run it any time (e.g. to switch themes).</li>
       </ul>
     </div>
   </div>

@@ -7,7 +7,7 @@
     1.  Self-elevates to Administrator.
     2.  Closes OBS if it is running (configs are only safe to edit when closed).
     3.  Downloads + installs the maintained pro plugin stack:
-          Move transition, Source Clone, Advanced Scene Switcher, Background Removal.
+          Move transition, Source Clone, Advanced Scene Switcher.
     4.  Creates a tuned profile "Stream 1080p60 NVENC":
           - NVENC H.264, 1080p60, 9000 kbps CBR (YouTube-friendly)
           - Replay buffer: keeps the last 60s in memory, F10 saves a clip to
@@ -18,7 +18,7 @@
           - Scenes: Starting Soon / Gaming / Coding / Just Chatting / BRB.
           - Mic filter chain: Noise Suppression -> Gate -> Compressor -> Limiter.
           - Desktop Audio auto-ducking: game volume dips while you talk.
-          - Webcam: AI Background Removal, forced 1080p 16:9 capture.
+          - Webcam: forced 1080p 16:9 capture.
           - Animated overlay theme wired in as browser sources (webcam frame,
             in-game HUD, animated background, Starting Soon with live countdown,
             BRB screen). Theme: -Theme acid | printstream | purple (default acid).
@@ -136,21 +136,6 @@ foreach ($i in $installers) {
     Start-Process -FilePath $exe -ArgumentList "/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART" -Wait
     Ok "$($i.Name) installed"
 }
-
-# 3b. Background Removal ships as a zip -> extract into the OBS folder
-$bgUrl = "https://github.com/royshil/obs-backgroundremoval/releases/download/1.3.7/obs-backgroundremoval-1.3.7-windows-x64.zip"
-$bgZip = Join-Path $tmp "backgroundremoval.zip"
-$bgOut = Join-Path $tmp "bg"
-Info "Downloading Background Removal..."
-Invoke-WebRequest -Uri $bgUrl -OutFile $bgZip
-if (Test-Path $bgOut) { Remove-Item $bgOut -Recurse -Force }
-Expand-Archive -Path $bgZip -DestinationPath $bgOut -Force
-# zip contains obs-plugins\ and data\ that map onto the OBS root
-foreach ($sub in @("obs-plugins","data")) {
-    $src = Join-Path $bgOut $sub
-    if (Test-Path $src) { Copy-Item "$src\*" (Join-Path $obsDir $sub) -Recurse -Force }
-}
-Ok "Background Removal installed"
 
 # ---------------------------------------------------------------------------
 # 4. Profile: Stream 1080p60 NVENC
@@ -353,10 +338,7 @@ $sceneJson = @'
       "versioned_id": "dshow_input",
       "settings": { "res_type": 1, "resolution": "1920x1080", "last_resolution": "1920x1080" },
       "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
-      "monitoring_type": 0, "private_settings": {},
-      "filters": [
-        { "name": "Background Removal", "uuid": "b0000000-0000-4000-8000-000000000005", "id": "background_removal", "versioned_id": "background_removal", "settings": {}, "enabled": true }
-      ]
+      "monitoring_type": 0, "private_settings": {}, "filters": []
     },
     {
       "name": "Display Capture",
@@ -588,7 +570,6 @@ Next steps in OBS:
 
 Mic already has: Noise Suppression -> Gate -> Compressor -> Limiter.
 Desktop Audio has auto-ducking: game volume dips while you talk.
-Webcam already has: AI Background Removal (no green screen needed).
 Overlays: CS-themed webcam frame, HUD, animated background, Starting Soon
   (with countdown) and BRB screens are already wired into the scenes. To change
   text, edit the .html files in $overlayDest then right-click the source > Refresh.
