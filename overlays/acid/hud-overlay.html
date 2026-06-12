@@ -84,7 +84,7 @@
     <div class="row">
       <div class="cell"><span class="k">MAP</span><span class="v" id="map">&mdash;</span></div>
       <div class="vdiv"></div>
-      <div class="cell"><span class="k" id="plabel">PREMIER</span><span class="v" id="pval">&mdash;</span></div>
+      <div class="cell"><span class="k" id="plabel">RANK</span><span class="v" id="pval">GLOBAL</span></div>
       <div class="vdiv"></div>
       <div class="scroll"><div class="track">
         <span>&#9679; DROP A FOLLOW</span><span>&#9679; !COMMANDS</span><span>&#9679; GLHF</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; X @ZEVON</span><span>&#9679; YT @ZEVONCS</span>
@@ -95,9 +95,9 @@
 
 <script>
   // Live values from the local GSI server (gsi\run-gsi.bat must be running).
-  // If the server is off, the chips just show a dash - nothing breaks.
-  // PREMIER chip: shows the rating from gsi\premier-elo.txt if set (>0);
-  // otherwise falls back to live match K/D from the game.
+  // MAP shows the live map name; a dash when not in a match or server off.
+  // RANK chip: reads "RANK GLOBAL" by default; if gsi\premier-elo.txt has a
+  // rating (>0) it switches to "PREMIER <number>".
   const mapEl  = document.getElementById('map');
   const pLabel = document.getElementById('plabel');
   const pVal   = document.getElementById('pval');
@@ -118,12 +118,11 @@
       if (premier > 0) {
         pLabel.textContent = 'PREMIER';
         pVal.textContent = premier;
-      } else if (g.player && g.player.match_stats) {
-        const ms = g.player.match_stats;
-        pLabel.textContent = 'K/D';
-        pVal.textContent = ms.deaths > 0 ? (ms.kills / ms.deaths).toFixed(2) : ms.kills;
+      } else {
+        pLabel.textContent = 'RANK';
+        pVal.textContent = 'GLOBAL';
       }
-    } catch (e) { /* server off - keep the dashes */ }
+    } catch (e) { /* server off - defaults stay */ }
     setTimeout(pollGame, 3000);
   }
   pollPremier(); pollGame();
