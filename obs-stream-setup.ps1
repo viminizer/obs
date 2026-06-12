@@ -527,7 +527,11 @@ $gsiSrc  = Join-Path $PSScriptRoot "gsi"
 $gsiDest = Join-Path $appData "gsi"
 if (Test-Path (Join-Path $gsiSrc "gsi-server.ps1")) {
     New-Item -ItemType Directory -Force -Path $gsiDest | Out-Null
-    Copy-Item (Join-Path $gsiSrc "*") $gsiDest -Force
+    # premier-elo.txt holds your manually-set rating - never overwrite it
+    Copy-Item (Join-Path $gsiSrc "*") $gsiDest -Force -Exclude "premier-elo.txt"
+    if (-not (Test-Path (Join-Path $gsiDest "premier-elo.txt"))) {
+        Copy-Item (Join-Path $gsiSrc "premier-elo.txt") $gsiDest
+    }
     Ok "Stats server copied to $gsiDest"
 
     # find CS2's cfg folder through Steam (checks every Steam library drive)

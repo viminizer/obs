@@ -11,6 +11,11 @@ $port = 3456
 $root = Split-Path -Parent $MyInvocation.MyCommand.Path
 $html = Join-Path $root "stats-overlay.html"
 
+# Premier rating shown on the HUD. Valve exposes it nowhere (not in GSI, no
+# API), so it lives in premier-elo.txt next to this script - edit the number
+# there whenever your rating changes, the HUD picks it up within a minute.
+$premierFile = Join-Path $root "premier-elo.txt"
+
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://127.0.0.1:$port/")
 $listener.Start()
@@ -33,6 +38,16 @@ while ($listener.IsListening) {
             $res.ContentType = "application/json"
             $res.Headers.Add("Access-Control-Allow-Origin", "*")
             $buf = [Text.Encoding]::UTF8.GetBytes($latest)
+        }
+        elseif ($req.Url.AbsolutePath -eq "/premier") {
+            $elo = $null
+            if (Test-Path $premierFile) {
+                $raw = (Get-Content $premierFile -Raw).Trim()
+                if ($raw -match '^\d+$' -and [int]$raw -gt 0) { $elo = [int]$raw }
+            }
+            $res.ContentType = "application/json"
+            $res.Headers.Add("Access-Control-Allow-Origin", "*")
+            $buf = [Text.Encoding]::UTF8.GetBytes((@{ elo = $elo } | ConvertTo-Json -Compress))
         }
         else {
             $res.ContentType = "text/html"

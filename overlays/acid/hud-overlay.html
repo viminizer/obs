@@ -59,7 +59,7 @@
 <body>
   <div class="brand">
     <div class="main">ZEVON</div><br>
-    <div class="sub">CS2 &#9679; PREMIER</div>
+    <div class="sub">CS2 &#9679; PREMIER &#9679; FACEIT</div>
   </div>
 
   <div class="live">
@@ -82,9 +82,9 @@
   <div class="ticker">
     <div class="tape"></div>
     <div class="row">
-      <div class="cell"><span class="k">MAP</span><span class="v">DE_MIRAGE</span></div>
+      <div class="cell"><span class="k">MAP</span><span class="v" id="map">&mdash;</span></div>
       <div class="vdiv"></div>
-      <div class="cell"><span class="k">RANK</span><span class="v">SUPREME</span></div>
+      <div class="cell"><span class="k" id="plabel">PREMIER</span><span class="v" id="pval">&mdash;</span></div>
       <div class="vdiv"></div>
       <div class="scroll"><div class="track">
         <span>&#9679; DROP A FOLLOW</span><span>&#9679; !COMMANDS</span><span>&#9679; GLHF</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; X @ZEVON</span><span>&#9679; YT @ZEVONCS</span>
@@ -92,5 +92,41 @@
       </div></div>
     </div>
   </div>
+
+<script>
+  // Live values from the local GSI server (gsi\run-gsi.bat must be running).
+  // If the server is off, the chips just show a dash - nothing breaks.
+  // PREMIER chip: shows the rating from gsi\premier-elo.txt if set (>0);
+  // otherwise falls back to live match K/D from the game.
+  const mapEl  = document.getElementById('map');
+  const pLabel = document.getElementById('plabel');
+  const pVal   = document.getElementById('pval');
+  let premier = 0;
+
+  async function pollPremier() {
+    try {
+      const d = await (await fetch('http://127.0.0.1:3456/premier', { cache: 'no-store' })).json();
+      premier = d.elo || 0;
+    } catch (e) { premier = 0; }
+    setTimeout(pollPremier, 60000);
+  }
+
+  async function pollGame() {
+    try {
+      const g = await (await fetch('http://127.0.0.1:3456/data', { cache: 'no-store' })).json();
+      if (g.map && g.map.name) mapEl.textContent = g.map.name.toUpperCase();
+      if (premier > 0) {
+        pLabel.textContent = 'PREMIER';
+        pVal.textContent = premier;
+      } else if (g.player && g.player.match_stats) {
+        const ms = g.player.match_stats;
+        pLabel.textContent = 'K/D';
+        pVal.textContent = ms.deaths > 0 ? (ms.kills / ms.deaths).toFixed(2) : ms.kills;
+      }
+    } catch (e) { /* server off - keep the dashes */ }
+    setTimeout(pollGame, 3000);
+  }
+  pollPremier(); pollGame();
+</script>
 </body>
 </html>
