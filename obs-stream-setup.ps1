@@ -122,13 +122,19 @@ Write-Host "`n--- Plugins ---" -ForegroundColor White
 $tmp = Join-Path $env:TEMP "obs-setup"
 New-Item -ItemType Directory -Force -Path $tmp | Out-Null
 
-# 3a. Inno-Setup installers -> silent install (they auto-detect the OBS path)
+# 3a. Inno-Setup installers -> silent install (they auto-detect the OBS path).
+# Already-installed plugins (their DLL exists in the OBS folder) are skipped,
+# so re-running this script is fast and download-free.
 $installers = @(
-    @{ Name="Move transition";          Url="https://github.com/exeldro/obs-move-transition/releases/download/3.2.1/move-transition-3.2.1-windows-installer.exe" },
-    @{ Name="Source Clone";             Url="https://github.com/exeldro/obs-source-clone/releases/download/0.2.3/source-clone-0.2.3-windows-installer.exe" },
-    @{ Name="Advanced Scene Switcher";  Url="https://github.com/WarmUpTill/SceneSwitcher/releases/download/1.34.2/advanced-scene-switcher-1.34.2-windows-x64-Installer.exe" }
+    @{ Name="Move transition";          Dll="move-transition.dll";          Url="https://github.com/exeldro/obs-move-transition/releases/download/3.2.1/move-transition-3.2.1-windows-installer.exe" },
+    @{ Name="Source Clone";             Dll="source-clone.dll";             Url="https://github.com/exeldro/obs-source-clone/releases/download/0.2.3/source-clone-0.2.3-windows-installer.exe" },
+    @{ Name="Advanced Scene Switcher";  Dll="advanced-scene-switcher.dll";  Url="https://github.com/WarmUpTill/SceneSwitcher/releases/download/1.34.2/advanced-scene-switcher-1.34.2-windows-x64-Installer.exe" }
 )
 foreach ($i in $installers) {
+    if (Test-Path (Join-Path $obsDir "obs-plugins\64bit\$($i.Dll)")) {
+        Ok "$($i.Name) already installed - skipped"
+        continue
+    }
     $exe = Join-Path $tmp ([IO.Path]::GetFileName($i.Url))
     Info "Downloading $($i.Name)..."
     Invoke-WebRequest -Uri $i.Url -OutFile $exe
