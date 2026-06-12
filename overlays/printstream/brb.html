@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<!--
+  Be Right Back - PRINTSTREAM theme. Browser Source 1920x1080, full-screen.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Teko:wght@600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #ececed;
+               font-family: 'Rajdhani', sans-serif; color: #0d0d0f; }
+  :root { --holo: linear-gradient(110deg,#ff3d8b,#ff8a3d,#f5e63d,#3dff8a,#3dd0ff,#8a3dff,#ff3d8b); }
+  @keyframes holo { to { background-position: 300% 0; } }
+
+  .bg { position: absolute; inset: 0; background: radial-gradient(130% 100% at 50% 28%, #fff 0%, #e7e7ea 55%, #d4d4da 100%); }
+  .dots { position: absolute; inset: 0; opacity: .5; background-image: radial-gradient(circle, rgba(0,0,0,.10) 1.4px, transparent 1.6px); background-size: 16px 16px; }
+  .sheen { position: absolute; inset: -20%; background: var(--holo); background-size: 200% 200%; mix-blend-mode: screen; opacity: .15; filter: blur(40px); animation: drift 14s ease-in-out infinite; }
+  @keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  .streak { position: absolute; background: #0d0d0f; width: 2600px; left: -300px; transform: rotate(-19deg); }
+  .streak.a { height: 240px; top: 420px; clip-path: polygon(0 30%,100% 0,100% 75%,0 100%); }
+  .streak.b { height: 64px;  top: 360px; clip-path: polygon(0 20%,100% 0,100% 80%,0 100%); opacity: .85; }
+  .streak::after { content: ''; position: absolute; left: 0; top: -4px; width: 100%; height: 4px; background: var(--holo); background-size: 300% 100%; animation: holo 6s linear infinite; }
+
+  .wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+  .eyebrow { display: flex; align-items: center; gap: 14px; font-weight: 700; letter-spacing: 9px; font-size: 22px; color: #0d0d0f; }
+  .eyebrow .l, .eyebrow .r { width: 70px; height: 3px; background: var(--holo); background-size: 300% 100%; animation: holo 6s linear infinite; }
+
+  .title { font-family: 'Teko', sans-serif; font-weight: 700; font-size: 184px; line-height: .86; letter-spacing: 3px; text-transform: uppercase; text-align: center;
+           background: linear-gradient(180deg,#fff 0%,#d2d2d8 40%,#76767f 52%,#d2d2d8 60%,#fff 100%);
+           -webkit-background-clip: text; background-clip: text; color: transparent;
+           filter: drop-shadow(0 3px 2px rgba(0,0,0,.35)); }
+
+  .sub { font-weight: 700; letter-spacing: 6px; font-size: 24px; color: #2a2a2e; text-transform: uppercase; }
+
+  .dots3 { display: flex; gap: 14px; margin-top: 8px; }
+  .dots3 span { width: 16px; height: 16px; background: #0d0d0f; transform: rotate(45deg); animation: hop 1.2s ease-in-out infinite; }
+  .dots3 span:nth-child(2){ animation-delay: .15s; }
+  .dots3 span:nth-child(3){ animation-delay: .3s; }
+  @keyframes hop { 0%,100% { transform: rotate(45deg) translateY(0); opacity:.45;} 50% { transform: rotate(45deg) translateY(-14px); opacity:1;} }
+
+  .hud { position: absolute; width: 56px; height: 56px; border: 5px solid #0d0d0f; }
+  .hud.tl { top: 44px; left: 44px; border-right: none; border-bottom: none; }
+  .hud.tr { top: 44px; right: 44px; border-left: none; border-bottom: none; }
+  .hud.bl { bottom: 44px; left: 44px; border-right: none; border-top: none; }
+  .hud.br { bottom: 44px; right: 44px; border-left: none; border-top: none; }
+</style>
+</head>
+<body>
+  <div class="bg">
+    <div class="sheen"></div><div class="dots"></div>
+    <div class="streak b"></div><div class="streak a"></div>
+  </div>
+  <div class="hud tl"></div><div class="hud tr"></div><div class="hud bl"></div><div class="hud br"></div>
+  <div class="wrap">
+    <div class="eyebrow"><div class="l"></div>TACTICAL PAUSE<div class="r"></div></div>
+    <div class="title">BE RIGHT BACK</div>
+    <div class="sub">Repositioning &middot; back in a moment</div>
+    <div class="dots3"><span></span><span></span><span></span></div>
+  </div>
+</body>
+</html>

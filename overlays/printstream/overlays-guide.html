@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Printstream overlays - preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Teko:wght@700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #d9d9dd; color: #16161a; font-family: 'Rajdhani', sans-serif; padding: 48px 40px 80px; }
+  h1 { font-family: 'Teko', sans-serif; font-weight: 700; font-size: 58px; letter-spacing: 2px;
+       background: linear-gradient(180deg,#fff,#cfcfd6 45%,#76767f 52%,#fff); -webkit-background-clip: text; background-clip: text; color: transparent;
+       filter: drop-shadow(0 2px 1px rgba(0,0,0,.35)); }
+  .holo { height: 6px; width: 280px; margin: 8px 0 30px; border-radius: 3px;
+          background: linear-gradient(110deg,#ff3d8b,#ff8a3d,#f5e63d,#3dff8a,#3dd0ff,#8a3dff,#ff3d8b); background-size: 300% 100%; animation: h 6s linear infinite; }
+  @keyframes h { to { background-position: 300% 0; } }
+  .lede { color: #3a3a40; font-size: 19px; max-width: 860px; margin-bottom: 34px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px,1fr)); gap: 28px; }
+  .card { background: #fff; border: 1px solid #c2c2c8; border-radius: 12px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,.12); }
+  .card h2 { font-family: 'Teko', sans-serif; font-weight: 700; font-size: 30px; letter-spacing: 1px; padding: 16px 20px 4px; }
+  .file { font-family: monospace; font-size: 13px; color: #b0007a; padding: 0 20px 12px; }
+  .prev { height: 247px; overflow: hidden; position: relative; border-top: 1px solid #d8d8de; border-bottom: 1px solid #d8d8de; background: #000; }
+  .prev.cam { background: linear-gradient(135deg,#2a2a3a,#555); display: flex; align-items: center; justify-content: center; }
+  .full iframe { width: 1920px; height: 1080px; transform: scale(.2292); transform-origin: top left; border: 0; }
+  .cambox { position: relative; width: 360px; height: 202px; }
+  .cambox iframe { width: 360px; height: 202px; border: 0; }
+  .cambox .face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #ccc; letter-spacing: 1px; }
+  ol { padding: 16px 22px 20px 38px; }
+  li { margin-bottom: 7px; font-size: 15.5px; color: #333; }
+  code { background: #efeff3; color: #b0007a; padding: 1px 7px; border-radius: 4px; font-size: 13px; }
+  .note { margin-top: 36px; padding: 18px 22px; background: #fff; border-left: 4px solid #0d0d0f; border-radius: 0 8px 8px 0; font-size: 15.5px; line-height: 1.6; color: #333; max-width: 980px; box-shadow: 0 4px 14px rgba(0,0,0,.08); }
+  .note b { color: #0d0d0f; }
+</style>
+</head>
+<body>
+  <h1>PRINTSTREAM OVERLAYS</h1>
+  <div class="holo"></div>
+  <p class="lede">White / black / chrome with a true holographic sheen. Five animated Browser Sources. Live previews below (small here, they render full size in OBS at 1920&times;1080).</p>
+
+  <div class="grid">
+    <div class="card"><h2>Webcam frame</h2><div class="file">webcam-frame.html</div>
+      <div class="prev cam"><div class="cambox"><div class="face">your camera</div><iframe src="webcam-frame.html"></iframe></div></div>
+      <ol><li>+ Browser &rarr; Local file &rarr; this file.</li><li>Size to your Webcam box.</li><li>Place <b>above</b> the Webcam.</li></ol></div>
+
+    <div class="card"><h2>In-game HUD</h2><div class="file">hud-overlay.html</div>
+      <div class="prev full"><iframe src="hud-overlay.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li><b>Top</b> of Gaming / Coding scenes.</li><li>Center stays clear of gameplay.</li></ol></div>
+
+    <div class="card"><h2>Animated background</h2><div class="file">background.html</div>
+      <div class="prev full"><iframe src="background.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li><b>Bottom</b> of the scene.</li></ol></div>
+
+    <div class="card"><h2>Starting soon</h2><div class="file">starting-soon.html</div>
+      <div class="prev full"><iframe src="starting-soon.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li>Full-screen in the Starting Soon scene.</li></ol></div>
+
+    <div class="card"><h2>Be right back</h2><div class="file">brb.html</div>
+      <div class="prev full"><iframe src="brb.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li>Full-screen in the BRB scene.</li></ol></div>
+  </div>
+
+  <div class="note"><b>The setup script already wires these in.</b> It now copies the Printstream folder into OBS and points every Browser Source at it &mdash; just run <code>run-setup.bat</code> and pick the "Stream Kit" scene collection. To edit text, open a <code>.html</code>, change the words near <code>ZEVON</code> / <code>DE_MIRAGE</code>, save, then right-click the source &rarr; <b>Refresh</b>.</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<!--
+  Starting Soon - ACID PROTOCOL. Browser Source 1920x1080, full-screen.
+  Edit handle + socials (ZEVON / @zevon).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@600;700&display=swap');
+  :root { --acid: #DFE104; --ink: #0a0a0a; --paper: #f5f5f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink);
+               font-family: 'Chakra Petch', sans-serif; }
+
+  .grain { position: absolute; inset: 0; opacity: .12; z-index: 5; pointer-events: none;
+    background-image: radial-gradient(circle, #fff 1px, transparent 1.4px); background-size: 7px 7px; }
+
+  /* edge marquee tapes top + bottom */
+  .marq { position: absolute; left: 0; right: 0; height: 54px; background: var(--acid); border: 5px solid var(--ink);
+          overflow: hidden; display: flex; align-items: center; z-index: 4; }
+  .marq.top { top: 0; } .marq.bot { bottom: 0; }
+  .marq .t { display: flex; white-space: nowrap; font-family: 'Russo One', sans-serif; font-size: 26px;
+             letter-spacing: 3px; color: var(--ink); animation: slide 12s linear infinite; }
+  .marq.bot .t { animation-direction: reverse; }
+  .marq .t span { padding-right: 48px; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* giant ghost type behind */
+  .ghost { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-4deg);
+           font-family: 'Russo One', sans-serif; font-size: 360px; line-height: .9; white-space: nowrap;
+           color: transparent; -webkit-text-stroke: 3px rgba(223,225,4,.18); }
+
+  .wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; z-index: 3; }
+
+  /* stacked brutal title plates */
+  .plate { border: 6px solid var(--ink); font-family: 'Russo One', sans-serif; text-transform: uppercase; line-height: 1; }
+  .p1 { background: var(--paper); color: var(--ink); font-size: 120px; padding: 14px 46px 18px;
+        transform: rotate(-2deg); box-shadow: 14px 14px 0 var(--acid); }
+  .p2 { background: var(--acid); color: var(--ink); font-size: 120px; padding: 14px 46px 18px;
+        transform: rotate(1.5deg) translateY(-12px); box-shadow: 14px 14px 0 var(--paper);
+        animation: shake 5s steps(1) infinite; }
+  @keyframes shake { 0%,93%,100% { transform: rotate(1.5deg) translateY(-12px); } 95% { transform: rotate(2.6deg) translateY(-12px) translateX(3px); } 97% { transform: rotate(.6deg) translateY(-12px) translateX(-3px); } }
+
+  /* progress: ammo-style loading blocks */
+  .ammo { display: flex; gap: 8px; margin-top: 8px; border: 4px solid var(--ink); background: var(--paper); padding: 8px; box-shadow: 8px 8px 0 var(--acid); }
+  .ammo i { width: 26px; height: 30px; background: var(--ink); animation: fill 2.8s steps(1) infinite; }
+  .ammo i:nth-child(1){ animation-delay: 0s; } .ammo i:nth-child(2){ animation-delay: .28s; }
+  .ammo i:nth-child(3){ animation-delay: .56s; } .ammo i:nth-child(4){ animation-delay: .84s; }
+  .ammo i:nth-child(5){ animation-delay: 1.12s; } .ammo i:nth-child(6){ animation-delay: 1.4s; }
+  .ammo i:nth-child(7){ animation-delay: 1.68s; } .ammo i:nth-child(8){ animation-delay: 1.96s; }
+  .ammo i:nth-child(9){ animation-delay: 2.24s; } .ammo i:nth-child(10){ animation-delay: 2.52s; }
+  @keyframes fill { 0% { background: var(--ink); opacity: .15; } 50%,100% { background: var(--acid); opacity: 1; border: 2px solid var(--ink); } }
+
+  .socials { display: flex; gap: 18px; }
+  .chip { background: var(--ink); color: var(--paper); border: 3px solid var(--acid); padding: 6px 18px;
+          font-weight: 700; font-size: 20px; letter-spacing: 2px; }
+  .chip b { color: var(--acid); }
+  .chip:nth-child(1){ transform: rotate(-1.5deg); } .chip:nth-child(2){ transform: rotate(1deg); } .chip:nth-child(3){ transform: rotate(-1deg); }
+
+  /* corner stamps */
+  .reg { position: absolute; width: 26px; height: 26px; z-index: 4; }
+  .reg::before, .reg::after { content: ''; position: absolute; background: var(--acid); }
+  .reg::before { left: 50%; top: 0; width: 4px; height: 100%; transform: translateX(-50%); }
+  .reg::after  { top: 50%; left: 0; height: 4px; width: 100%; transform: translateY(-50%); }
+  .reg.tl { top: 80px; left: 60px; } .reg.tr { top: 80px; right: 60px; }
+  .reg.bl { bottom: 84px; left: 60px; } .reg.br { bottom: 84px; right: 60px; }
+</style>
+</head>
+<body>
+  <div class="ghost">SOON SOON</div>
+  <div class="marq top"><div class="t">
+    <span>&#9679; STARTING SOON</span><span>&#9679; ZEVON</span><span>&#9679; GRAB A COFFEE</span><span>&#9679; CS2</span>
+    <span>&#9679; STARTING SOON</span><span>&#9679; ZEVON</span><span>&#9679; GRAB A COFFEE</span><span>&#9679; CS2</span>
+  </div></div>
+  <div class="marq bot"><div class="t">
+    <span>&#9679; NO MERCY</span><span>&#9679; RUSH B</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; GLHF</span>
+    <span>&#9679; NO MERCY</span><span>&#9679; RUSH B</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; GLHF</span>
+  </div></div>
+
+  <div class="wrap">
+    <div class="plate p1">STARTING</div>
+    <div class="plate p2">SOON&trade;</div>
+    <div class="ammo"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="socials">
+      <div class="chip">TWITCH <b>/ZEVON</b></div>
+      <div class="chip">X <b>@ZEVON</b></div>
+      <div class="chip">YT <b>@ZEVONCS</b></div>
+    </div>
+  </div>
+
+  <div class="reg tl"></div><div class="reg tr"></div><div class="reg bl"></div><div class="reg br"></div>
+  <div class="grain"></div>
+</body>
+</html>

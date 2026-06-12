@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Stream overlays - setup guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #07040d; color: #e8def5; font-family: 'Rajdhani', sans-serif;
+         padding: 48px 40px 80px; }
+  h1 { font-family: 'Teko', sans-serif; font-weight: 600; font-size: 56px; letter-spacing: 2px;
+       background: linear-gradient(90deg,#fff,#c026ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .lede { color: #b98fd8; font-size: 19px; margin: 6px 0 36px; letter-spacing: .5px; max-width: 820px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px,1fr)); gap: 28px; }
+  .card { background: #0d0718; border: 1px solid rgba(192,38,255,.3); border-radius: 12px; overflow: hidden; }
+  .card h2 { font-family: 'Teko', sans-serif; font-weight: 600; font-size: 30px; letter-spacing: 1px; padding: 16px 20px 6px; color: #fff; }
+  .file { font-family: monospace; font-size: 13px; color: #ff2bd6; padding: 0 20px 12px; }
+  .prev { background: #000; border-top: 1px solid rgba(192,38,255,.25); border-bottom: 1px solid rgba(192,38,255,.25);
+          height: 247px; overflow: hidden; position: relative; }
+  .prev.cam { background: linear-gradient(135deg,#2a2a3a,#444); display: flex; align-items: center; justify-content: center; }
+  .prev iframe { border: 0; transform-origin: top left; }
+  .full iframe  { width: 1920px; height: 1080px; transform: scale(.2292); }   /* 440 / 1920 */
+  .cambox { position: relative; width: 360px; height: 202px; }
+  .cambox iframe { width: 360px; height: 202px; }
+  .cambox .face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+                  font-size: 13px; color: #888; letter-spacing: 1px; }
+  ol { padding: 16px 22px 20px 38px; }
+  li { margin-bottom: 7px; font-size: 15.5px; color: #d6c8e8; }
+  code { background: rgba(192,38,255,.14); color: #f0d9ff; padding: 1px 7px; border-radius: 4px; font-size: 13px; }
+  .note { margin-top: 36px; padding: 18px 22px; background: rgba(192,38,255,.08);
+          border-left: 3px solid #c026ff; border-radius: 0 8px 8px 0; font-size: 15.5px; line-height: 1.6; color: #d6c8e8; max-width: 980px; }
+  .note b { color: #fff; }
+</style>
+</head>
+<body>
+  <h1>STREAM OVERLAYS &mdash; CS THEME</h1>
+  <p class="lede">Five animated overlays. Each is a Browser Source in OBS. Live previews below (small &mdash; they render full size in OBS at 1920&times;1080). Edit text by opening the file and changing the labels near <code>ZEVON</code>.</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Webcam frame</h2>
+      <div class="file">webcam-frame.html</div>
+      <div class="prev cam">
+        <div class="cambox">
+          <div class="face">your camera</div>
+          <iframe src="webcam-frame.html"></iframe>
+        </div>
+      </div>
+      <ol>
+        <li>Sources &rarr; <b>+ Browser</b> &rarr; Local file &rarr; pick this file.</li>
+        <li>Set Width/Height to match your Webcam box.</li>
+        <li>Drag it <b>above</b> the Webcam source.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>In-game HUD</h2>
+      <div class="file">hud-overlay.html</div>
+      <div class="prev full"><iframe src="hud-overlay.html" scrolling="no"></iframe></div>
+      <ol>
+        <li>Add as Browser Source, <b>1920&times;1080</b>.</li>
+        <li>Place on <b>top</b> of Gaming / Coding scenes.</li>
+        <li>Center is transparent &mdash; never covers gameplay.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Animated background</h2>
+      <div class="file">background.html</div>
+      <div class="prev full"><iframe src="background.html" scrolling="no"></iframe></div>
+      <ol>
+        <li>Add as Browser Source, <b>1920&times;1080</b>.</li>
+        <li>Place at the <b>bottom</b> of the scene.</li>
+        <li>Great behind webcam in Just Chatting / Coding.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Starting soon</h2>
+      <div class="file">starting-soon.html</div>
+      <div class="prev full"><iframe src="starting-soon.html" scrolling="no"></iframe></div>
+      <ol>
+        <li>Add as Browser Source, <b>1920&times;1080</b>.</li>
+        <li>Full-screen in the Starting Soon scene.</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h2>Be right back</h2>
+      <div class="file">brb.html</div>
+      <div class="prev full"><iframe src="brb.html" scrolling="no"></iframe></div>
+      <ol>
+        <li>Add as Browser Source, <b>1920&times;1080</b>.</li>
+        <li>Full-screen in the BRB scene.</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Adding a Browser Source in OBS:</b> Sources panel &rarr; <code>+</code> &rarr; <b>Browser</b> &rarr; check <b>Local file</b> &rarr; Browse to the <code>.html</code> &rarr; set Width/Height &rarr; OK.
+    Tick <b>"Refresh browser when scene becomes active"</b> so animations restart cleanly.
+    <br><br>
+    <b>To edit text</b> (handle, socials, map name): open the file in any editor and change the words near <code>ZEVON</code> / <code>@zevon</code> / <code>DE_MIRAGE</code>. Save, then right-click the source &rarr; <b>Refresh</b>.
+  </div>
+</body>
+</html>

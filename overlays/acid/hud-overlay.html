@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--
+  In-game HUD - ACID PROTOCOL (kinetic brutalism). Transparent center.
+  OBS: Browser Source 1920x1080, ON TOP of the scene.
+  Edit text (ZEVON / DE_MIRAGE / socials) below.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@600;700&display=swap');
+  :root { --acid: #DFE104; --ink: #0a0a0a; --paper: #f5f5f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+               font-family: 'Chakra Petch', sans-serif; }
+
+  /* top-left brand sticker stack */
+  .brand { position: absolute; top: 30px; left: 34px; transform: rotate(-2deg); }
+  .brand .main { background: var(--acid); border: 4px solid var(--ink); box-shadow: 7px 7px 0 var(--ink);
+                 padding: 8px 20px; font-family: 'Russo One', sans-serif; font-size: 30px; color: var(--ink); letter-spacing: 1px; }
+  .brand .sub { display: inline-block; margin: 6px 0 0 14px; transform: rotate(1.5deg);
+                background: var(--ink); color: var(--paper); padding: 3px 12px; font-weight: 700;
+                font-size: 14px; letter-spacing: 3px; box-shadow: 4px 4px 0 var(--acid); }
+
+  /* top-right LIVE counter plate */
+  .live { position: absolute; top: 30px; right: 34px; transform: rotate(1.5deg); display: flex; align-items: stretch;
+          border: 4px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); }
+  .live .red { background: #e21c1c; display: flex; align-items: center; gap: 8px; padding: 8px 14px; }
+  .live .red i { width: 12px; height: 12px; border-radius: 50%; background: #fff; animation: blink 1s steps(1) infinite; }
+  .live .red span { font-family: 'Russo One', sans-serif; font-size: 20px; color: #fff; letter-spacing: 3px; }
+  .live .yellow { background: var(--acid); display: flex; align-items: center; padding: 8px 14px;
+                  font-weight: 700; font-size: 16px; letter-spacing: 2px; color: var(--ink); }
+  @keyframes blink { 50% { opacity: .15; } }
+
+  /* bottom ticker - full hazard treatment */
+  .ticker { position: absolute; left: 0; right: 0; bottom: 0; }
+  .ticker .tape { height: 12px; border-top: 3px solid var(--ink);
+                  background: repeating-linear-gradient(-45deg, var(--acid) 0 16px, var(--ink) 16px 32px);
+                  background-size: 46px 100%; animation: crawl 1.4s linear infinite; }
+  @keyframes crawl { to { background-position: 46px 0; } }
+  .ticker .row { display: flex; align-items: stretch; background: var(--ink); height: 46px; }
+  .cell { display: flex; align-items: center; gap: 10px; padding: 0 22px; }
+  .cell .k { font-family: 'Russo One', sans-serif; font-size: 17px; color: var(--ink); background: var(--acid);
+             padding: 2px 10px; letter-spacing: 1px; transform: skewX(-8deg); }
+  .cell .v { font-weight: 700; font-size: 18px; letter-spacing: 2px; color: var(--paper); }
+  .vdiv { width: 4px; background: var(--acid); transform: skewX(-8deg); margin: 8px 0; }
+  .scroll { flex: 1; overflow: hidden; display: flex; align-items: center; }
+  .scroll .track { display: flex; white-space: nowrap; animation: slide 14s linear infinite;
+                   font-weight: 700; font-size: 17px; letter-spacing: 2px; color: var(--acid); }
+  .scroll .track span { padding-right: 40px; }
+  @keyframes slide { to { transform: translateX(-50%); } }
+
+  /* random rotating stamp bottom-right above ticker */
+  .stamp { position: absolute; right: 30px; bottom: 76px; width: 92px; height: 92px; opacity: .85;
+           animation: spin 14s linear infinite; }
+  .stamp svg { width: 100%; height: 100%; }
+</style>
+</head>
+<body>
+  <div class="brand">
+    <div class="main">ZEVON</div><br>
+    <div class="sub">CS2 &#9679; PREMIER</div>
+  </div>
+
+  <div class="live">
+    <div class="red"><i></i><span>LIVE</span></div>
+    <div class="yellow">NO MERCY</div>
+  </div>
+
+  <div class="stamp">
+    <svg viewBox="0 0 100 100">
+      <defs><path id="c" d="M 50,50 m -38,0 a 38,38 0 1,1 76,0 a 38,38 0 1,1 -76,0"/></defs>
+      <circle cx="50" cy="50" r="48" fill="none" stroke="#DFE104" stroke-width="3"/>
+      <circle cx="50" cy="50" r="28" fill="none" stroke="#DFE104" stroke-width="2"/>
+      <text fill="#DFE104" font-family="Chakra Petch, sans-serif" font-size="11.5" font-weight="700" letter-spacing="2.5">
+        <textPath href="#c">CERTIFIED CLUTCH &#9679; ACID PROTOCOL &#9679;</textPath>
+      </text>
+    </svg>
+  </div>
+  <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+  <div class="ticker">
+    <div class="tape"></div>
+    <div class="row">
+      <div class="cell"><span class="k">MAP</span><span class="v">DE_MIRAGE</span></div>
+      <div class="vdiv"></div>
+      <div class="cell"><span class="k">RANK</span><span class="v">SUPREME</span></div>
+      <div class="vdiv"></div>
+      <div class="scroll"><div class="track">
+        <span>&#9679; DROP A FOLLOW</span><span>&#9679; !COMMANDS</span><span>&#9679; GLHF</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; X @ZEVON</span><span>&#9679; YT @ZEVONCS</span>
+        <span>&#9679; DROP A FOLLOW</span><span>&#9679; !COMMANDS</span><span>&#9679; GLHF</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; X @ZEVON</span><span>&#9679; YT @ZEVONCS</span>
+      </div></div>
+    </div>
+  </div>
+</body>
+</html>

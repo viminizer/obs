@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!--
+  Animated background - ACID PROTOCOL (kinetic brutalism)
+  OBS: Browser Source 1920x1080, BOTTOM of the scene.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@600;700&display=swap');
+  :root { --acid: #DFE104; --ink: #0a0a0a; --paper: #f0f0ea; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink); }
+
+  /* concrete texture */
+  .grain { position: absolute; inset: 0; opacity: .12;
+    background-image: radial-gradient(circle, #fff 1px, transparent 1.4px); background-size: 7px 7px; }
+
+  /* giant scrolling outline-type marquees, rotated */
+  .band { position: absolute; left: -10%; width: 120%; overflow: hidden; }
+  .band .t { display: flex; white-space: nowrap; font-family: 'Russo One', sans-serif; text-transform: uppercase; line-height: 1; }
+  .band .t span { padding-right: 60px; }
+  .b1 { top: 80px; transform: rotate(-4deg); }
+  .b1 .t { font-size: 190px; color: transparent; -webkit-text-stroke: 3px rgba(223,225,4,.55); animation: l 22s linear infinite; }
+  .b2 { top: 420px; transform: rotate(-4deg); }
+  .b2 .t { font-size: 230px; color: var(--acid); opacity: .14; animation: r 26s linear infinite; }
+  .b3 { bottom: 70px; transform: rotate(-4deg); }
+  .b3 .t { font-size: 190px; color: transparent; -webkit-text-stroke: 3px rgba(240,240,234,.25); animation: l 30s linear infinite; }
+  @keyframes l { to { transform: translateX(-50%); } }
+  @keyframes r { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+
+  /* hazard tape diagonals */
+  .hz { position: absolute; height: 38px; left: -200px; right: -200px; border: 4px solid var(--ink);
+        background: repeating-linear-gradient(-45deg, var(--acid) 0 22px, var(--ink) 22px 44px);
+        background-size: 62px 100%; animation: crawl 1.6s linear infinite; box-shadow: 0 6px 0 rgba(0,0,0,.7); }
+  .hz.a { top: 330px; transform: rotate(-4deg); }
+  .hz.b { bottom: 240px; transform: rotate(-4deg); animation-direction: reverse; }
+  @keyframes crawl { to { background-position: 62px 0; } }
+
+  /* stamped plates */
+  .plate { position: absolute; background: var(--acid); border: 5px solid var(--ink); box-shadow: 10px 10px 0 rgba(223,225,4,.25);
+           font-family: 'Russo One', sans-serif; color: var(--ink); padding: 10px 26px; text-transform: uppercase; }
+  .plate.p1 { top: 200px; right: 140px; transform: rotate(3deg); font-size: 40px; animation: pulse 3s steps(1) infinite; }
+  .plate.p2 { bottom: 150px; left: 120px; transform: rotate(-2deg); font-size: 28px; background: var(--paper); }
+  @keyframes pulse { 0%,88%,100% { transform: rotate(3deg) scale(1); } 92% { transform: rotate(3deg) scale(1.06); } }
+
+  /* barcode block */
+  .bar { position: absolute; top: 210px; left: 130px; width: 200px; height: 64px; transform: rotate(-2deg);
+         background: repeating-linear-gradient(90deg, var(--paper) 0 3px, transparent 3px 7px, var(--paper) 7px 9px, transparent 9px 16px);
+         opacity: .5; }
+  .bar::after { content: 'ID 1337-ZEVON'; position: absolute; left: 0; bottom: -22px; font-family: 'Chakra Petch', monospace;
+                font-weight: 700; font-size: 13px; letter-spacing: 4px; color: var(--paper); opacity: .8; }
+
+  /* big crosshair stamp */
+  .cross { position: absolute; top: 50%; left: 50%; width: 420px; height: 420px; transform: translate(-50%,-50%); opacity: .1; }
+  .cross::before, .cross::after { content: ''; position: absolute; background: var(--acid); }
+  .cross::before { left: 50%; top: 0; width: 6px; height: 100%; transform: translateX(-50%); }
+  .cross::after  { top: 50%; left: 0; height: 6px; width: 100%; transform: translateY(-50%); }
+  .cross .ring { position: absolute; inset: 70px; border: 6px solid var(--acid); border-radius: 50%; }
+</style>
+</head>
+<body>
+  <div class="band b2"><div class="t"><span>NO MERCY NO MERCY NO MERCY</span><span>NO MERCY NO MERCY NO MERCY</span></div></div>
+  <div class="band b1"><div class="t"><span>ZEVON &#9679; LIVE &#9679;</span><span>ZEVON &#9679; LIVE &#9679;</span></div></div>
+  <div class="band b3"><div class="t"><span>RUSH B &#9679; CLUTCH &#9679; ACE &#9679;</span><span>RUSH B &#9679; CLUTCH &#9679; ACE &#9679;</span></div></div>
+  <div class="hz a"></div><div class="hz b"></div>
+  <div class="cross"><div class="ring"></div></div>
+  <div class="plate p1">LIVE!</div>
+  <div class="plate p2">EST. 2026 &#9679; CS2</div>
+  <div class="bar"></div>
+  <div class="grain"></div>
+</body>
+</html>

@@ -14,6 +14,10 @@
 
   Run it (from the folder you saved it in):
       powershell -ExecutionPolicy Bypass -File .\obs-stream-setup.ps1
+  or double-click run-setup.bat.
+
+  Overlay theme: pass -Theme acid | printstream | purple (default: acid).
+      run-setup.bat printstream
 
   Nothing here is destructive: it only ADDS a new profile + a new scene
   collection. Your current ones are untouched. After it runs, open OBS and pick
@@ -21,13 +25,18 @@
   webcam / audio source once to select your device.
 #>
 
+param(
+    [ValidateSet("acid","printstream","purple")]
+    [string]$Theme = "acid"
+)
+
 # ---------------------------------------------------------------------------
 # 0. Elevate to admin
 # ---------------------------------------------------------------------------
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host "Elevating to Administrator..." -ForegroundColor Yellow
-    Start-Process powershell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Bypass -File `"$PSCommandPath`""
+    Start-Process powershell.exe -Verb RunAs -ArgumentList "-ExecutionPolicy Bypass -File `"$PSCommandPath`" -Theme $Theme"
     exit
 }
 
@@ -199,6 +208,23 @@ Write-Host "`n--- Scenes ---" -ForegroundColor White
 $sceneDir = Join-Path $appData "basic\scenes"
 New-Item -ItemType Directory -Force -Path $sceneDir | Out-Null
 
+# Copy the overlay HTML files (shipped next to this script) into a stable OBS
+# folder, so the browser sources keep working even if you move the repo later.
+# The purple set lives directly in overlays\, the others in their own subfolder.
+Info "Overlay theme: $Theme"
+$overlaySrc = if ($Theme -eq "purple") { Join-Path $PSScriptRoot "overlays" }
+              else { Join-Path $PSScriptRoot "overlays\$Theme" }
+$overlayDest = Join-Path $appData "overlays"
+New-Item -ItemType Directory -Force -Path $overlayDest | Out-Null
+if (Test-Path (Join-Path $overlaySrc "webcam-frame.html")) {
+    Copy-Item (Join-Path $overlaySrc "*.html") $overlayDest -Force
+    Ok "Overlays copied to $overlayDest"
+} else {
+    Warn "overlays\ not found next to the script - put the .html files in $overlayDest yourself."
+}
+# forward slashes -> valid inside JSON with no escaping needed
+$ovl = ($overlayDest -replace '\\','/')
+
 $sceneJson = @'
 {
   "current_scene": "Gaming",
@@ -300,14 +326,53 @@ $sceneJson = @'
       "monitoring_type": 0, "private_settings": {}, "filters": []
     },
     {
+      "name": "Background",
+      "uuid": "a0000000-0000-4000-8000-000000000009",
+      "id": "browser_source", "versioned_id": "browser_source",
+      "settings": { "is_local_file": true, "local_file": "__BG__", "width": 1920, "height": 1080, "restart_when_active": true, "reroute_audio": false },
+      "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
+      "monitoring_type": 0, "private_settings": {}, "filters": []
+    },
+    {
+      "name": "HUD",
+      "uuid": "a0000000-0000-4000-8000-00000000000a",
+      "id": "browser_source", "versioned_id": "browser_source",
+      "settings": { "is_local_file": true, "local_file": "__HUD__", "width": 1920, "height": 1080, "restart_when_active": true, "reroute_audio": false },
+      "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
+      "monitoring_type": 0, "private_settings": {}, "filters": []
+    },
+    {
+      "name": "Webcam Frame",
+      "uuid": "a0000000-0000-4000-8000-00000000000b",
+      "id": "browser_source", "versioned_id": "browser_source",
+      "settings": { "is_local_file": true, "local_file": "__FRAME__", "width": 480, "height": 270, "restart_when_active": true, "reroute_audio": false },
+      "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
+      "monitoring_type": 0, "private_settings": {}, "filters": []
+    },
+    {
+      "name": "Starting Screen",
+      "uuid": "a0000000-0000-4000-8000-00000000000c",
+      "id": "browser_source", "versioned_id": "browser_source",
+      "settings": { "is_local_file": true, "local_file": "__START__", "width": 1920, "height": 1080, "restart_when_active": true, "reroute_audio": false },
+      "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
+      "monitoring_type": 0, "private_settings": {}, "filters": []
+    },
+    {
+      "name": "BRB Screen",
+      "uuid": "a0000000-0000-4000-8000-00000000000d",
+      "id": "browser_source", "versioned_id": "browser_source",
+      "settings": { "is_local_file": true, "local_file": "__BRB__", "width": 1920, "height": 1080, "restart_when_active": true, "reroute_audio": false },
+      "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
+      "monitoring_type": 0, "private_settings": {}, "filters": []
+    },
+    {
       "name": "Starting Soon",
       "uuid": "c0000000-0000-4000-8000-000000000001",
       "id": "scene", "versioned_id": "scene",
       "settings": {
         "custom_size": false, "id_counter": 2,
         "items": [
-          { "name": "BG", "source_uuid": "a0000000-0000-4000-8000-000000000006", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 0, "bounds": { "x": 0.0, "y": 0.0 }, "id": 1 },
-          { "name": "Starting Text", "source_uuid": "a0000000-0000-4000-8000-000000000007", "visible": true, "locked": false, "pos": { "x": 660.0, "y": 480.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 0, "bounds": { "x": 0.0, "y": 0.0 }, "id": 2 }
+          { "name": "Starting Screen", "source_uuid": "a0000000-0000-4000-8000-00000000000c", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 1 }
         ]
       },
       "mixers": 0, "private_settings": {}, "filters": []
@@ -317,12 +382,14 @@ $sceneJson = @'
       "uuid": "c0000000-0000-4000-8000-000000000002",
       "id": "scene", "versioned_id": "scene",
       "settings": {
-        "custom_size": false, "id_counter": 4,
+        "custom_size": false, "id_counter": 7,
         "items": [
           { "name": "Display Capture", "source_uuid": "a0000000-0000-4000-8000-000000000002", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 1 },
           { "name": "Webcam", "source_uuid": "a0000000-0000-4000-8000-000000000003", "visible": true, "locked": false, "pos": { "x": 20.0, "y": 405.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 480.0, "y": 270.0 }, "bounds_align": 0, "id": 2 },
           { "name": "Mic", "source_uuid": "a0000000-0000-4000-8000-000000000004", "visible": true, "locked": false, "id": 3 },
-          { "name": "Desktop Audio", "source_uuid": "a0000000-0000-4000-8000-000000000005", "visible": true, "locked": false, "id": 4 }
+          { "name": "Desktop Audio", "source_uuid": "a0000000-0000-4000-8000-000000000005", "visible": true, "locked": false, "id": 4 },
+          { "name": "Webcam Frame", "source_uuid": "a0000000-0000-4000-8000-00000000000b", "visible": true, "locked": false, "pos": { "x": 20.0, "y": 405.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 480.0, "y": 270.0 }, "bounds_align": 0, "id": 5 },
+          { "name": "HUD", "source_uuid": "a0000000-0000-4000-8000-00000000000a", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 6 }
         ]
       },
       "mixers": 0, "private_settings": {}, "filters": []
@@ -332,12 +399,14 @@ $sceneJson = @'
       "uuid": "c0000000-0000-4000-8000-000000000003",
       "id": "scene", "versioned_id": "scene",
       "settings": {
-        "custom_size": false, "id_counter": 4,
+        "custom_size": false, "id_counter": 7,
         "items": [
           { "name": "Display Capture", "source_uuid": "a0000000-0000-4000-8000-000000000002", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 1 },
           { "name": "Webcam", "source_uuid": "a0000000-0000-4000-8000-000000000003", "visible": true, "locked": false, "pos": { "x": 20.0, "y": 405.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 480.0, "y": 270.0 }, "bounds_align": 0, "id": 2 },
           { "name": "Mic", "source_uuid": "a0000000-0000-4000-8000-000000000004", "visible": true, "locked": false, "id": 3 },
-          { "name": "Desktop Audio", "source_uuid": "a0000000-0000-4000-8000-000000000005", "visible": true, "locked": false, "id": 4 }
+          { "name": "Desktop Audio", "source_uuid": "a0000000-0000-4000-8000-000000000005", "visible": true, "locked": false, "id": 4 },
+          { "name": "Webcam Frame", "source_uuid": "a0000000-0000-4000-8000-00000000000b", "visible": true, "locked": false, "pos": { "x": 20.0, "y": 405.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 480.0, "y": 270.0 }, "bounds_align": 0, "id": 5 },
+          { "name": "HUD", "source_uuid": "a0000000-0000-4000-8000-00000000000a", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 6 }
         ]
       },
       "mixers": 0, "private_settings": {}, "filters": []
@@ -347,10 +416,11 @@ $sceneJson = @'
       "uuid": "c0000000-0000-4000-8000-000000000004",
       "id": "scene", "versioned_id": "scene",
       "settings": {
-        "custom_size": false, "id_counter": 3,
+        "custom_size": false, "id_counter": 5,
         "items": [
-          { "name": "BG", "source_uuid": "a0000000-0000-4000-8000-000000000006", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 0, "bounds": { "x": 0.0, "y": 0.0 }, "id": 1 },
+          { "name": "Background", "source_uuid": "a0000000-0000-4000-8000-000000000009", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 1 },
           { "name": "Webcam", "source_uuid": "a0000000-0000-4000-8000-000000000003", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 2 },
+          { "name": "HUD", "source_uuid": "a0000000-0000-4000-8000-00000000000a", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 4 },
           { "name": "Mic", "source_uuid": "a0000000-0000-4000-8000-000000000004", "visible": true, "locked": false, "id": 3 }
         ]
       },
@@ -363,8 +433,7 @@ $sceneJson = @'
       "settings": {
         "custom_size": false, "id_counter": 2,
         "items": [
-          { "name": "BG", "source_uuid": "a0000000-0000-4000-8000-000000000006", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 0, "bounds": { "x": 0.0, "y": 0.0 }, "id": 1 },
-          { "name": "BRB Text", "source_uuid": "a0000000-0000-4000-8000-000000000008", "visible": true, "locked": false, "pos": { "x": 720.0, "y": 480.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 0, "bounds": { "x": 0.0, "y": 0.0 }, "id": 2 }
+          { "name": "BRB Screen", "source_uuid": "a0000000-0000-4000-8000-00000000000d", "visible": true, "locked": false, "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "align": 5, "bounds_type": 2, "bounds": { "x": 1920.0, "y": 1080.0 }, "bounds_align": 0, "id": 1 }
         ]
       },
       "mixers": 0, "private_settings": {}, "filters": []
@@ -372,6 +441,14 @@ $sceneJson = @'
   ]
 }
 '@
+# swap the overlay path placeholders for the real absolute local-file paths
+$sceneJson = $sceneJson.
+    Replace('__FRAME__', "$ovl/webcam-frame.html").
+    Replace('__HUD__',   "$ovl/hud-overlay.html").
+    Replace('__BG__',    "$ovl/background.html").
+    Replace('__START__', "$ovl/starting-soon.html").
+    Replace('__BRB__',   "$ovl/brb.html")
+
 # write UTF-8 without BOM (OBS prefers no BOM)
 [IO.File]::WriteAllText((Join-Path $sceneDir "Stream Kit.json"), $sceneJson, (New-Object Text.UTF8Encoding($false)))
 Ok "Scene collection 'Stream Kit' created"
@@ -395,5 +472,11 @@ Next steps in OBS:
 
 Mic already has: Noise Suppression -> Gate -> Compressor -> Limiter.
 Webcam already has: AI Background Removal (no green screen needed).
+Overlays: CS-themed webcam frame, HUD, animated background, Starting Soon and
+  BRB screens are already wired into the scenes (Browser Sources). To change the
+  text on them, edit the .html files in $overlayDest then right-click the source
+  in OBS > Refresh.
 Stream delay: 60s anti-snipe buffer is on (Settings > Advanced > Stream Delay).
 "@ -ForegroundColor White
+
+Read-Host "`nPress Enter to close this window"

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!--
+  Be Right Back screen - CS theme (purple/magenta)
+  OBS: add as Browser Source 1920x1080, full-screen in your "BRB" scene.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@500;600;700&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #07040d;
+               font-family: 'Rajdhani', sans-serif; color: #fff; }
+
+  .bg { position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 50% 38%, #1c0c33 0%, #0c0518 55%, #050309 100%); }
+  .blob { position: absolute; width: 760px; height: 760px; border-radius: 50%; filter: blur(95px); opacity: .4; }
+  .blob.a { background: #c026ff; top: -200px; left: -140px; animation: d1 16s ease-in-out infinite; }
+  .blob.b { background: #ff2bd6; bottom: -240px; right: -160px; animation: d2 19s ease-in-out infinite; }
+  @keyframes d1 { 0%,100% { transform: translate(0,0);} 50% { transform: translate(130px,90px);} }
+  @keyframes d2 { 0%,100% { transform: translate(0,0);} 50% { transform: translate(-110px,-90px);} }
+  .grid { position: absolute; left: -25%; right: -25%; bottom: -10%; height: 70%;
+    background-image: linear-gradient(rgba(192,38,255,.22) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,43,214,.16) 1px, transparent 1px);
+    background-size: 64px 64px; transform: perspective(420px) rotateX(62deg); transform-origin: bottom center;
+    animation: scroll 7s linear infinite;
+    -webkit-mask-image: linear-gradient(to top,#000,transparent 80%);
+    mask-image: linear-gradient(to top,#000,transparent 80%); }
+  @keyframes scroll { from { background-position: 0 0;} to { background-position: 0 64px;} }
+  .lines { position: absolute; inset: 0; opacity: .45;
+    background: repeating-linear-gradient(0deg,transparent 0 3px,rgba(0,0,0,.2) 3px 4px); }
+
+  .wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; }
+
+  .eyebrow { display: flex; align-items: center; gap: 14px; font-weight: 600; letter-spacing: 9px; font-size: 22px; color: #d8a8ff; }
+  .eyebrow .l { width: 70px; height: 2px; background: linear-gradient(90deg,transparent,#c026ff); }
+  .eyebrow .r { width: 70px; height: 2px; background: linear-gradient(90deg,#ff2bd6,transparent); }
+
+  .title { font-family: 'Teko', sans-serif; font-weight: 700; font-size: 176px; line-height: .88; letter-spacing: 4px;
+           text-transform: uppercase; background: linear-gradient(180deg,#fff 30%,#e6b3ff 70%,#c026ff);
+           -webkit-background-clip: text; background-clip: text; color: transparent;
+           filter: drop-shadow(0 0 26px rgba(192,38,255,.55)); text-align: center; }
+
+  .sub { font-weight: 600; letter-spacing: 6px; font-size: 24px; color: #b98fd8; text-transform: uppercase; }
+
+  /* animated reloading dots */
+  .dots { display: flex; gap: 14px; margin-top: 8px; }
+  .dots span { width: 16px; height: 16px; background: #c026ff; box-shadow: 0 0 12px #c026ff;
+               transform: rotate(45deg); animation: hop 1.2s ease-in-out infinite; }
+  .dots span:nth-child(2){ animation-delay: .15s; background:#d94de0; box-shadow:0 0 12px #d94de0; }
+  .dots span:nth-child(3){ animation-delay: .3s; background:#ff2bd6; box-shadow:0 0 12px #ff2bd6; }
+  @keyframes hop { 0%,100% { transform: rotate(45deg) translateY(0); opacity:.5;} 50% { transform: rotate(45deg) translateY(-14px); opacity:1;} }
+
+  .hud { position: absolute; width: 54px; height: 54px; border: 3px solid rgba(255,43,214,.7); filter: drop-shadow(0 0 6px rgba(255,43,214,.7)); }
+  .hud.tl { top: 46px; left: 46px; border-right: none; border-bottom: none; }
+  .hud.tr { top: 46px; right: 46px; border-left: none; border-bottom: none; }
+  .hud.bl { bottom: 46px; left: 46px; border-right: none; border-top: none; }
+  .hud.br { bottom: 46px; right: 46px; border-left: none; border-top: none; }
+</style>
+</head>
+<body>
+  <div class="bg">
+    <div class="blob a"></div><div class="blob b"></div>
+    <div class="grid"></div><div class="lines"></div>
+  </div>
+  <div class="hud tl"></div><div class="hud tr"></div><div class="hud bl"></div><div class="hud br"></div>
+
+  <div class="wrap">
+    <div class="eyebrow"><div class="l"></div>TACTICAL PAUSE<div class="r"></div></div>
+    <div class="title">BE RIGHT BACK</div>
+    <div class="sub">Repositioning &middot; back in a moment</div>
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+</body>
+</html>

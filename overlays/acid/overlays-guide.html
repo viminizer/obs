@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Acid Protocol overlays - preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@600;700&display=swap');
+  :root { --acid: #DFE104; --ink: #0a0a0a; --paper: #f5f5f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--ink); color: var(--paper); font-family: 'Chakra Petch', sans-serif; padding: 48px 40px 80px; }
+  h1 { font-family: 'Russo One', sans-serif; font-size: 58px; letter-spacing: 2px; color: var(--ink);
+       background: var(--acid); display: inline-block; padding: 8px 26px; border: 5px solid var(--ink);
+       box-shadow: 10px 10px 0 var(--paper); transform: rotate(-1deg); }
+  .lede { color: #cfcfc6; font-size: 18px; max-width: 860px; margin: 30px 0 36px; font-weight: 600; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(440px,1fr)); gap: 30px; }
+  .card { background: #141410; border: 4px solid var(--acid); }
+  .card h2 { font-family: 'Russo One', sans-serif; font-size: 26px; letter-spacing: 1px; padding: 14px 20px 4px; color: var(--acid); }
+  .file { font-family: monospace; font-size: 13px; color: #9b9b86; padding: 0 20px 12px; }
+  .prev { height: 247px; overflow: hidden; position: relative; border-top: 3px solid var(--acid); border-bottom: 3px solid var(--acid); background: #000; }
+  .prev.cam { background: linear-gradient(135deg,#2a2a3a,#555); display: flex; align-items: center; justify-content: center; }
+  .full iframe { width: 1920px; height: 1080px; transform: scale(.2292); transform-origin: top left; border: 0; }
+  .cambox { position: relative; width: 360px; height: 202px; }
+  .cambox iframe { width: 360px; height: 202px; border: 0; }
+  .cambox .face { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; color: #ccc; letter-spacing: 1px; }
+  ol { padding: 16px 22px 20px 38px; }
+  li { margin-bottom: 7px; font-size: 15px; color: #d9d9cf; font-weight: 600; }
+  code { background: #26261c; color: var(--acid); padding: 1px 7px; font-size: 13px; }
+  .note { margin-top: 36px; padding: 18px 22px; background: #141410; border-left: 6px solid var(--acid); font-size: 15.5px; line-height: 1.6; color: #d9d9cf; max-width: 980px; font-weight: 600; }
+  .note b { color: var(--acid); }
+</style>
+</head>
+<body>
+  <h1>ACID PROTOCOL</h1>
+  <p class="lede">Kinetic brutalism: acid yellow, hazard tape, stamped plates, scrolling marquees, hard offset shadows, zero rounded corners. Five animated Browser Sources. Previews are scaled down - they render full size in OBS.</p>
+
+  <div class="grid">
+    <div class="card"><h2>Webcam frame</h2><div class="file">webcam-frame.html</div>
+      <div class="prev cam"><div class="cambox"><div class="face">your camera</div><iframe src="webcam-frame.html"></iframe></div></div>
+      <ol><li>+ Browser &rarr; Local file &rarr; this file.</li><li>Size to your Webcam box.</li><li>Place <b>above</b> the Webcam.</li></ol></div>
+
+    <div class="card"><h2>In-game HUD</h2><div class="file">hud-overlay.html</div>
+      <div class="prev full"><iframe src="hud-overlay.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li><b>Top</b> of Gaming / Coding scenes.</li><li>Center stays clear of gameplay.</li></ol></div>
+
+    <div class="card"><h2>Animated background</h2><div class="file">background.html</div>
+      <div class="prev full"><iframe src="background.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li><b>Bottom</b> of the scene.</li></ol></div>
+
+    <div class="card"><h2>Starting soon</h2><div class="file">starting-soon.html</div>
+      <div class="prev full"><iframe src="starting-soon.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li>Full-screen in the Starting Soon scene.</li></ol></div>
+
+    <div class="card"><h2>Be right back</h2><div class="file">brb.html</div>
+      <div class="prev full"><iframe src="brb.html" scrolling="no"></iframe></div>
+      <ol><li>Browser Source <b>1920&times;1080</b>.</li><li>Full-screen in the BRB scene.</li></ol></div>
+  </div>
+
+  <div class="note"><b>To make the setup script use this theme:</b> in <code>obs-stream-setup.ps1</code> change <code>overlays\printstream</code> to <code>overlays\acid</code>, then re-run <code>run-setup.bat</code>. To edit text, open a <code>.html</code>, change the words near <code>ZEVON</code> / <code>DE_MIRAGE</code>, save, then right-click the source &rarr; <b>Refresh</b>.</div>
+</body>
+</html>

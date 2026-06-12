@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<!--
+  Be Right Back - ACID PROTOCOL. Browser Source 1920x1080, full-screen.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Russo+One&family=Chakra+Petch:wght@600;700&display=swap');
+  :root { --acid: #DFE104; --ink: #0a0a0a; --paper: #f5f5f0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: var(--ink);
+               font-family: 'Chakra Petch', sans-serif; }
+
+  .grain { position: absolute; inset: 0; opacity: .12; z-index: 5; pointer-events: none;
+    background-image: radial-gradient(circle, #fff 1px, transparent 1.4px); background-size: 7px 7px; }
+
+  /* full-screen rotating hazard frame */
+  .hz { position: absolute; left: -100px; right: -100px; height: 44px; border: 5px solid var(--ink);
+        background: repeating-linear-gradient(-45deg, var(--acid) 0 20px, var(--ink) 20px 40px);
+        background-size: 58px 100%; animation: crawl 1.5s linear infinite; z-index: 4; }
+  .hz.a { top: 130px; transform: rotate(-3deg); }
+  .hz.b { bottom: 130px; transform: rotate(-3deg); animation-direction: reverse; }
+  @keyframes crawl { to { background-position: 58px 0; } }
+
+  .ghost { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%) rotate(-4deg);
+           font-family: 'Russo One', sans-serif; font-size: 330px; line-height: .9; white-space: nowrap;
+           color: transparent; -webkit-text-stroke: 3px rgba(223,225,4,.16); }
+
+  .wrap { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px; z-index: 3; }
+
+  .tag { background: #e21c1c; color: #fff; border: 5px solid var(--ink); box-shadow: 8px 8px 0 var(--acid);
+         font-family: 'Russo One', sans-serif; font-size: 26px; letter-spacing: 4px; padding: 6px 22px;
+         transform: rotate(-2deg); animation: blink 1.6s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: .55; } }
+
+  .plate { border: 6px solid var(--ink); font-family: 'Russo One', sans-serif; text-transform: uppercase; line-height: 1;
+           background: var(--acid); color: var(--ink); font-size: 130px; padding: 16px 50px 20px;
+           transform: rotate(1deg); box-shadow: 16px 16px 0 var(--paper); }
+
+  .sub { background: var(--paper); color: var(--ink); border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--acid);
+         font-weight: 700; font-size: 22px; letter-spacing: 3px; padding: 6px 18px; transform: rotate(-1deg); }
+
+  /* bouncing shells */
+  .shells { display: flex; gap: 16px; margin-top: 6px; }
+  .shells i { width: 18px; height: 28px; background: var(--acid); border: 3px solid var(--ink);
+              animation: hop 1.1s ease-in-out infinite; }
+  .shells i:nth-child(2){ animation-delay: .14s; } .shells i:nth-child(3){ animation-delay: .28s; }
+  @keyframes hop { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-16px) rotate(12deg); } }
+</style>
+</head>
+<body>
+  <div class="ghost">BRB BRB</div>
+  <div class="hz a"></div><div class="hz b"></div>
+  <div class="wrap">
+    <div class="tag">TACTICAL PAUSE</div>
+    <div class="plate">BRB</div>
+    <div class="sub">REPOSITIONING &#9679; BACK IN A MOMENT</div>
+    <div class="shells"><i></i><i></i><i></i></div>
+  </div>
+  <div class="grain"></div>
+</body>
+</html>

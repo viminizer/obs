@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<!--
+  Animated background - PRINTSTREAM theme (white / black ink streaks / holo)
+  OBS: add as Browser Source 1920x1080, place at the BOTTOM of the scene.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: #ececed; }
+  :root { --holo: linear-gradient(110deg,#ff3d8b,#ff8a3d,#f5e63d,#3dff8a,#3dd0ff,#8a3dff,#ff3d8b); }
+
+  .bg { position: absolute; inset: 0;
+        background: radial-gradient(130% 100% at 50% 30%, #ffffff 0%, #e7e7ea 55%, #d4d4da 100%); }
+
+  /* halftone dot texture */
+  .dots { position: absolute; inset: 0; opacity: .5;
+          background-image: radial-gradient(circle, rgba(0,0,0,.10) 1.4px, transparent 1.6px);
+          background-size: 16px 16px; }
+
+  /* big black ink streaks */
+  .streak { position: absolute; background: #0d0d0f; }
+  .streak.a { width: 2600px; height: 150px; top: 120px; left: -300px; transform: rotate(-19deg);
+              clip-path: polygon(0 40%, 100% 0, 100% 70%, 0 100%); opacity: .92; }
+  .streak.b { width: 2600px; height: 60px; top: 300px; left: -300px; transform: rotate(-19deg);
+              clip-path: polygon(0 20%, 100% 0, 100% 80%, 0 100%); opacity: .85; }
+  .streak.c { width: 2600px; height: 220px; bottom: 60px; right: -300px; transform: rotate(-19deg);
+              clip-path: polygon(0 0, 100% 30%, 100% 100%, 0 70%); opacity: .92; }
+  /* holo edge riding each streak */
+  .streak::after { content: ''; position: absolute; left: 0; top: -4px; width: 100%; height: 4px;
+                   background: var(--holo); background-size: 300% 100%; animation: holo 6s linear infinite; opacity: .9; }
+  @keyframes holo { to { background-position: 300% 0; } }
+
+  /* drifting holo glow sweep (the iridescent shimmer) */
+  .sheen { position: absolute; inset: -20%; background: var(--holo); background-size: 200% 200%;
+           mix-blend-mode: screen; opacity: .14; filter: blur(40px); animation: drift 14s ease-in-out infinite; }
+  @keyframes drift { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+  /* chrome crosshair watermark */
+  .cross { position: absolute; top: 50%; left: 50%; width: 440px; height: 440px; transform: translate(-50%,-50%);
+           opacity: .12; animation: spin 50s linear infinite; }
+  .cross::before, .cross::after { content: ''; position: absolute; background: #0d0d0f; }
+  .cross::before { left: 50%; top: 0; width: 3px; height: 100%; transform: translateX(-50%); }
+  .cross::after  { top: 50%; left: 0; height: 3px; width: 100%; transform: translateY(-50%); }
+  .ring { position: absolute; top: 50%; left: 50%; width: 290px; height: 290px; transform: translate(-50%,-50%);
+          border: 3px solid #0d0d0f; border-radius: 50%; }
+  @keyframes spin { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+  /* top gloss highlight */
+  .gloss { position: absolute; top: 0; left: 0; right: 0; height: 40%;
+           background: linear-gradient(180deg, rgba(255,255,255,.6), transparent); }
+</style>
+</head>
+<body>
+  <div class="bg">
+    <div class="sheen"></div>
+    <div class="dots"></div>
+    <div class="streak a"></div><div class="streak b"></div><div class="streak c"></div>
+    <div class="cross"><div class="ring"></div></div>
+    <div class="gloss"></div>
+  </div>
+</body>
+</html>

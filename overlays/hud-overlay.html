@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!--
+  In-game HUD overlay - CS theme (purple/magenta)
+  Corner labels + LIVE badge + bottom info bar. Transparent center so it never
+  covers gameplay. OBS: add as Browser Source 1920x1080, place ON TOP of the
+  Gaming / Coding scene (above Display Capture and Webcam).
+  Edit text below (ZEVON / socials / map line).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Teko:wght@500;600&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent;
+               font-family: 'Rajdhani', sans-serif; color: #fff; }
+  :root { --p1:#c026ff; --p2:#ff2bd6; }
+
+  .panel { position: absolute; background: rgba(10,5,18,.82); border: 1px solid rgba(192,38,255,.45);
+           backdrop-filter: blur(2px); }
+
+  /* top-left: handle badge */
+  .brand { top: 34px; left: 34px; display: flex; align-items: center; gap: 12px; padding: 10px 20px 10px 14px;
+           clip-path: polygon(0 0,100% 0,94% 100%,0 100%); border-left: 3px solid var(--p2); }
+  .brand .mark { width: 30px; height: 30px; transform: rotate(45deg);
+                 background: linear-gradient(135deg,var(--p1),var(--p2)); box-shadow: 0 0 14px rgba(192,38,255,.8); }
+  .brand .name { font-family: 'Teko', sans-serif; font-weight: 600; font-size: 30px; letter-spacing: 2px; line-height: 1;
+                 text-shadow: 0 0 12px rgba(192,38,255,.6); }
+
+  /* top-right: LIVE + viewers placeholder */
+  .live { top: 34px; right: 34px; display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+          clip-path: polygon(6% 0,100% 0,100% 100%,0 100%); border-right: 3px solid var(--p2); }
+  .live .dot { width: 11px; height: 11px; border-radius: 50%; background: #ff2b4b; box-shadow: 0 0 10px #ff2b4b;
+               animation: blink 1.1s steps(1) infinite; }
+  .live .txt { font-weight: 700; letter-spacing: 3px; font-size: 18px; }
+  .live .sep { width: 1px; height: 20px; background: rgba(255,255,255,.25); }
+  .live .ct  { font-weight: 600; letter-spacing: 1px; font-size: 17px; color: #d8a8ff; }
+  @keyframes blink { 50% { opacity: .25; } }
+
+  /* bottom info bar */
+  .bar { left: 0; right: 0; bottom: 0; height: 46px; display: flex; align-items: center;
+         background: linear-gradient(90deg, rgba(10,5,18,.92), rgba(20,8,34,.85) 50%, rgba(10,5,18,.92));
+         border-top: 2px solid; border-image: linear-gradient(90deg,var(--p1),var(--p2)) 1; }
+  .bar .tick { width: 4px; height: 100%; background: var(--p2); box-shadow: 0 0 10px var(--p2); }
+  .bar .item { display: flex; align-items: center; gap: 9px; padding: 0 26px; font-weight: 600; letter-spacing: 1.5px; font-size: 18px; }
+  .bar .item .k { color: var(--p2); font-weight: 700; }
+  .bar .item .v { color: #eee; }
+  .bar .div { width: 1px; height: 22px; background: rgba(192,38,255,.4); }
+  .bar .spacer { flex: 1; }
+  .bar .socials { display: flex; gap: 24px; padding-right: 26px; font-weight: 600; letter-spacing: 1px; font-size: 17px; color: #cfb8e6; }
+  .bar .socials b { color: #fff; }
+
+  /* marquee on the bar */
+  .marq { overflow: hidden; max-width: 560px; }
+  .marq .track { display: inline-block; white-space: nowrap; padding-left: 100%; animation: scrollx 16s linear infinite;
+                 font-weight: 600; letter-spacing: 1px; font-size: 17px; color: #d8a8ff; }
+  @keyframes scrollx { to { transform: translateX(-100%); } }
+</style>
+</head>
+<body>
+  <!-- top-left brand -->
+  <div class="panel brand"><div class="mark"></div><div class="name">ZEVON</div></div>
+
+  <!-- top-right live -->
+  <div class="panel live"><div class="dot"></div><div class="txt">LIVE</div><div class="sep"></div><div class="ct">CS2 &middot; PREMIER</div></div>
+
+  <!-- bottom bar -->
+  <div class="panel bar">
+    <div class="tick"></div>
+    <div class="item"><span class="k">MAP</span><span class="v">DE_MIRAGE</span></div>
+    <div class="div"></div>
+    <div class="item"><span class="k">RANK</span><span class="v">SUPREME</span></div>
+    <div class="div"></div>
+    <div class="marq"><span class="track">Drop a follow if you are enjoying the stream &nbsp;&bull;&nbsp; !commands &nbsp;&bull;&nbsp; GLHF &nbsp;&bull;&nbsp; clutch or kick</span></div>
+    <div class="spacer"></div>
+    <div class="socials"><span>X <b>@zevon</b></span><span>YT <b>@zevoncs</b></span></div>
+  </div>
+</body>
+</html>
