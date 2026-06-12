@@ -13,8 +13,10 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 100%; height: 100%; background: transparent; overflow: hidden; }
 
-  /* hard black frame with acid offset block behind it */
-  .offset { position: absolute; inset: 10px 0 0 10px; background: var(--acid); }
+  /* hard black frame with acid offset block behind it - drawn as two strips
+     (right + bottom) so the center stays transparent for the camera */
+  .off-r  { position: absolute; top: 10px; right: 0; bottom: 0; width: 10px; background: var(--acid); }
+  .off-b  { position: absolute; left: 10px; bottom: 0; right: 0; height: 10px; background: var(--acid); }
   .frame  { position: absolute; inset: 0 10px 10px 0; border: 5px solid var(--ink); }
 
   /* hazard tape strip running along the bottom of the frame */
@@ -62,7 +64,7 @@
 </head>
 <body>
   <div class="jitter">
-    <div class="offset"></div>
+    <div class="off-r"></div><div class="off-b"></div>
     <div class="frame">
       <div class="marq"><div class="track">
         <span>&#9679; ON AIR</span><span>&#9679; ZEVON</span><span>&#9679; NO MERCY</span><span>&#9679; CS2</span>
