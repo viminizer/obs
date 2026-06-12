@@ -304,10 +304,12 @@
       <thead><tr><th style="width:32%">Feature</th><th>How it behaves</th></tr></thead>
       <tbody>
         <tr><td>Live CS2 stats</td><td>CS2 pushes game state (official Valve GSI) to a tiny local server; the Gaming scene shows HP / armor / money / K-D-A / round score + a BOMB PLANTED banner. Start <code>%APPDATA%\obs-studio\gsi\run-gsi.bat</code> before streaming — without it the bar simply hides.</td></tr>
+        <tr><td>Dynamic HUD chips</td><td>The bottom ticker's <b>MAP</b> chip shows the live map name from the game. The <b>RANK</b> chip reads <b>GLOBAL</b>; put your Premier rating in <code>gsi\premier-elo.txt</code> (just the number) and it switches to <b>PREMIER &lt;rating&gt;</b> — editable mid-stream, never overwritten by re-runs.</td></tr>
         <tr><td>Auto scene switch</td><td>Focusing the CS2 window switches OBS to the Gaming scene (built-in switcher, pre-configured).</td></tr>
         <tr><td>Audio ducking</td><td>Desktop Audio has a compressor sidechained to the mic — game volume dips while you talk.</td></tr>
         <tr><td>Replay clips</td><td><b>F10</b> saves the last 60 s to your Videos folder. Buffer starts with the stream automatically.</td></tr>
         <tr><td>Animated overlays</td><td>Webcam frame, HUD ticker, animated background, countdown + BRB screens — all browser sources, theme chosen at install (<code>acid</code> default). Edit text in <code>%APPDATA%\obs-studio\overlays\*.html</code>, then right-click the source → Refresh.</td></tr>
+        <tr><td>Fast re-runs</td><td><code>run-setup.bat</code> skips plugins that are already installed (no re-downloads), but rebuilds profile + scenes. For overlay tweaks only, use <code>update-overlays.bat</code> — copies just the HTML files, keeps your device picks and OBS tweaks intact.</td></tr>
       </tbody>
     </table>
   </div>
@@ -323,6 +325,7 @@
         <li><b>Idle → BRB rule (one time, ~30 s):</b> Tools → Advanced Scene Switcher → Idle tab → enable, switch to <b>BRB</b> after <b>120 seconds</b>. The script can't pre-build this one safely.</li>
         <li><b>Before each stream:</b> double-click <code>%APPDATA%\obs-studio\gsi\run-gsi.bat</code> and leave the window open — it powers the live CS2 stats.</li>
         <li><b>Settings → Stream:</b> confirm Restream/YouTube is still connected.</li>
+        <li><b>Optional — Premier rating on the HUD:</b> put the number in <code>%APPDATA%\obs-studio\gsi\premier-elo.txt</code>. Leave <code>0</code> and the chip shows RANK GLOBAL instead.</li>
         <li><b>Nothing is destructive</b> — the script only <b>adds</b> a new profile and scene collection. Your existing ones stay untouched. Re-run it any time (e.g. to switch themes).</li>
       </ul>
     </div>
