@@ -269,6 +269,9 @@ if (Test-Path (Join-Path $overlaySrc "webcam-frame.html")) {
 }
 # forward slashes -> valid inside JSON with no escaping needed
 $ovl = ($overlayDest -replace '\\','/')
+# the CS2 stats overlay is loaded from the gsi folder as a local file, so it
+# always loads even if the stats server starts after OBS (it self-heals)
+$gsiWeb = (($appData -replace '\\','/') + "/gsi/stats-overlay.html")
 
 $sceneJson = @'
 {
@@ -418,7 +421,7 @@ $sceneJson = @'
       "name": "CS2 Stats",
       "uuid": "a0000000-0000-4000-8000-00000000000e",
       "id": "browser_source", "versioned_id": "browser_source",
-      "settings": { "is_local_file": false, "url": "http://127.0.0.1:3456/", "width": 1920, "height": 1080, "restart_when_active": true, "shutdown": true, "reroute_audio": false },
+      "settings": { "is_local_file": true, "local_file": "__STATS__", "width": 1920, "height": 1080, "restart_when_active": true, "shutdown": false, "reroute_audio": false },
       "mixers": 0, "volume": 1.0, "balance": 0.5, "enabled": true, "muted": false,
       "monitoring_type": 0, "private_settings": {}, "filters": []
     },
@@ -513,7 +516,8 @@ $sceneJson = $sceneJson.
     Replace('__HUD__',   "$ovl/hud-overlay.html").
     Replace('__BG__',    "$ovl/background.html").
     Replace('__START__', "$ovl/starting-soon.html").
-    Replace('__BRB__',   "$ovl/brb.html")
+    Replace('__BRB__',   "$ovl/brb.html").
+    Replace('__STATS__', "$gsiWeb")
 
 # write UTF-8 without BOM (OBS prefers no BOM)
 [IO.File]::WriteAllText((Join-Path $sceneDir "Stream Kit.json"), $sceneJson, (New-Object Text.UTF8Encoding($false)))

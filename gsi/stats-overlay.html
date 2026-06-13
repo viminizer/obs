@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <!--
   CS2 live stats overlay - ACID PROTOCOL theme.
-  Served by gsi-server.ps1 at http://127.0.0.1:3456/ - add that URL as an OBS
-  Browser Source (1920x1080). It hides itself when CS2 is not sending data.
+  Loaded as a LOCAL FILE browser source (1920x1080) and polls the local GSI
+  server at http://127.0.0.1:3456/data. Because it loads from disk, OBS start
+  order no longer matters: if the server is down it just shows nothing and keeps
+  retrying every 300ms, then appears the moment CS2 + the server are up.
+  It also hides itself whenever CS2 is not sending data (menu / server off).
 -->
 <html lang="en">
 <head>
@@ -82,7 +85,7 @@
   }
   async function tick() {
     try {
-      const r = await fetch('/data', { cache: 'no-store' });
+      const r = await fetch('http://127.0.0.1:3456/data', { cache: 'no-store' });
       render(await r.json());
     } catch (e) {
       $('hud').classList.remove('on');
