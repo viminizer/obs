@@ -17,7 +17,9 @@
   html, body { width: 1920px; height: 1080px; overflow: hidden; background: transparent;
                font-family: 'Chakra Petch', sans-serif; }
 
-  #hud { position: absolute; top: 30px; left: 50%; transform: translateX(-50%);
+  /* sits just under the webcam (bottom-left), left edge aligned with the cam.
+     Move this if you reposition the webcam: cam is at x20 y405, 480x270. */
+  #hud { position: absolute; top: 690px; left: 20px;
          display: flex; align-items: stretch; border: 4px solid var(--ink);
          box-shadow: 7px 7px 0 var(--ink); opacity: 0; transition: opacity .3s; }
   #hud.on { opacity: 1; }
@@ -35,7 +37,7 @@
   .seg .v.hurt { color: #ff5050; }
 
   /* bomb planted banner */
-  #bomb { position: absolute; top: 96px; left: 50%; transform: translateX(-50%) rotate(-1.5deg);
+  #bomb { position: absolute; top: 748px; left: 20px; transform: rotate(-1.5deg);
           background: #e21c1c; color: #fff; border: 4px solid var(--ink); box-shadow: 6px 6px 0 var(--acid);
           font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: 4px; padding: 5px 20px;
           display: none; animation: flash .6s steps(1) infinite; }
