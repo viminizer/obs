@@ -2,7 +2,8 @@
 <!--
   In-game HUD - ACID PROTOCOL (kinetic brutalism). Transparent center.
   OBS: Browser Source 1920x1080, ON TOP of the scene.
-  Edit text (ZEVON / DE_MIRAGE / socials) below.
+  Layout: brand top-left, LIVE/NO MERCY box + rotating seal bottom-right
+  (top-right is left clear for the CS2 kill feed). Edit brand text (ZEVON) below.
 -->
 <html lang="en">
 <head>
@@ -22,8 +23,8 @@
                 background: var(--ink); color: var(--paper); padding: 3px 12px; font-weight: 700;
                 font-size: 14px; letter-spacing: 3px; box-shadow: 4px 4px 0 var(--acid); }
 
-  /* top-right LIVE counter plate */
-  .live { position: absolute; top: 30px; right: 34px; transform: rotate(1.5deg); display: flex; align-items: stretch;
+  /* bottom-right LIVE counter plate (kept clear of the top-right kill feed) */
+  .live { position: absolute; bottom: 30px; right: 34px; transform: rotate(1.5deg); display: flex; align-items: stretch;
           border: 4px solid var(--ink); box-shadow: 7px 7px 0 var(--ink); }
   .live .red { background: #e21c1c; display: flex; align-items: center; gap: 8px; padding: 8px 14px; }
   .live .red i { width: 12px; height: 12px; border-radius: 50%; background: #fff; animation: blink 1s steps(1) infinite; }
@@ -32,26 +33,8 @@
                   font-weight: 700; font-size: 16px; letter-spacing: 2px; color: var(--ink); }
   @keyframes blink { 50% { opacity: .15; } }
 
-  /* bottom ticker - full hazard treatment */
-  .ticker { position: absolute; left: 0; right: 0; bottom: 0; }
-  .ticker .tape { height: 12px; border-top: 3px solid var(--ink);
-                  background: repeating-linear-gradient(-45deg, var(--acid) 0 16px, var(--ink) 16px 32px);
-                  background-size: 46px 100%; animation: crawl 1.4s linear infinite; }
-  @keyframes crawl { to { background-position: 46px 0; } }
-  .ticker .row { display: flex; align-items: stretch; background: var(--ink); height: 46px; }
-  .cell { display: flex; align-items: center; gap: 10px; padding: 0 22px; }
-  .cell .k { font-family: 'Russo One', sans-serif; font-size: 17px; color: var(--ink); background: var(--acid);
-             padding: 2px 10px; letter-spacing: 1px; transform: skewX(-8deg); }
-  .cell .v { font-weight: 700; font-size: 18px; letter-spacing: 2px; color: var(--paper); }
-  .vdiv { width: 4px; background: var(--acid); transform: skewX(-8deg); margin: 8px 0; }
-  .scroll { flex: 1; overflow: hidden; display: flex; align-items: center; }
-  .scroll .track { display: flex; white-space: nowrap; animation: slide 14s linear infinite;
-                   font-weight: 700; font-size: 17px; letter-spacing: 2px; color: var(--acid); }
-  .scroll .track span { padding-right: 40px; }
-  @keyframes slide { to { transform: translateX(-50%); } }
-
-  /* random rotating stamp bottom-right above ticker */
-  .stamp { position: absolute; right: 30px; bottom: 76px; width: 92px; height: 92px; opacity: .85;
+  /* rotating seal - tucked just above the bottom-right LIVE box */
+  .stamp { position: absolute; right: 44px; bottom: 104px; width: 84px; height: 84px; opacity: .85;
            animation: spin 14s linear infinite; }
   .stamp svg { width: 100%; height: 100%; }
 </style>
@@ -79,53 +62,5 @@
   </div>
   <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
-  <div class="ticker">
-    <div class="tape"></div>
-    <div class="row">
-      <div class="cell"><span class="k">MAP</span><span class="v" id="map">&mdash;</span></div>
-      <div class="vdiv"></div>
-      <div class="cell"><span class="k" id="plabel">RANK</span><span class="v" id="pval">GLOBAL</span></div>
-      <div class="vdiv"></div>
-      <div class="scroll"><div class="track">
-        <span>&#9679; DROP A FOLLOW</span><span>&#9679; !COMMANDS</span><span>&#9679; GLHF</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; X @ZEVON</span><span>&#9679; YT @ZEVONCS</span>
-        <span>&#9679; DROP A FOLLOW</span><span>&#9679; !COMMANDS</span><span>&#9679; GLHF</span><span>&#9679; CLUTCH OR KICK</span><span>&#9679; X @ZEVON</span><span>&#9679; YT @ZEVONCS</span>
-      </div></div>
-    </div>
-  </div>
-
-<script>
-  // Live values from the local GSI server (gsi\run-gsi.bat must be running).
-  // MAP shows the live map name; a dash when not in a match or server off.
-  // RANK chip: reads "RANK GLOBAL" by default; if gsi\premier-elo.txt has a
-  // rating (>0) it switches to "PREMIER <number>".
-  const mapEl  = document.getElementById('map');
-  const pLabel = document.getElementById('plabel');
-  const pVal   = document.getElementById('pval');
-  let premier = 0;
-
-  async function pollPremier() {
-    try {
-      const d = await (await fetch('http://127.0.0.1:3456/premier', { cache: 'no-store' })).json();
-      premier = d.elo || 0;
-    } catch (e) { premier = 0; }
-    setTimeout(pollPremier, 60000);
-  }
-
-  async function pollGame() {
-    try {
-      const g = await (await fetch('http://127.0.0.1:3456/data', { cache: 'no-store' })).json();
-      if (g.map && g.map.name) mapEl.textContent = g.map.name.toUpperCase();
-      if (premier > 0) {
-        pLabel.textContent = 'PREMIER';
-        pVal.textContent = premier;
-      } else {
-        pLabel.textContent = 'RANK';
-        pVal.textContent = 'GLOBAL';
-      }
-    } catch (e) { /* server off - defaults stay */ }
-    setTimeout(pollGame, 3000);
-  }
-  pollPremier(); pollGame();
-</script>
 </body>
 </html>
